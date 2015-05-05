@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WC_Admin_Notices Class
+ * TT_Admin_Notices Class
  */
-class WC_Admin_Notices {
+class TT_Admin_Notices {
 
 	/**
 	 * Array of notices - name => callback
@@ -34,20 +34,21 @@ class WC_Admin_Notices {
 	 */
 	public function __construct() {
 		add_action( 'switch_theme', array( $this, 'reset_admin_notices' ) );
-		add_action( 'woocommerce_installed', array( $this, 'reset_admin_notices' ) );
+		add_action( 'timetrader_installed', array( $this, 'reset_admin_notices' ) );
 		add_action( 'wp_loaded', array( $this, 'hide_notices' ) );
-		add_action( 'woocommerce_hide_frontend_colors_notice', array( $this, 'hide_frontend_colors_notice' ) );
-		add_action( 'woocommerce_hide_install_notice', array( $this, 'hide_install_notice' ) );
-		add_action( 'woocommerce_hide_translation_upgrade_notice', array( $this, 'hide_translation_upgrade_notice' ) );
-		add_action( 'woocommerce_hide_tracking_notice', array( $this, 'hide_tracking_notice' ) );
+		add_action( 'timetrader_hide_frontend_colors_notice', array( $this, 'hide_frontend_colors_notice' ) );
+		add_action( 'timetrader_hide_install_notice', array( $this, 'hide_install_notice' ) );
+		add_action( 'timetrader_hide_translation_upgrade_notice', array( $this, 'hide_translation_upgrade_notice' ) );
+		add_action( 'timetrader_hide_tracking_notice', array( $this, 'hide_tracking_notice' ) );
 		add_action( 'admin_print_styles', array( $this, 'add_notices' ) );
 		add_action( 'admin_init', array( $this, 'check_optin_action' ) );
 	}
 
 	/**
-	 * Reset notices for themes when switched or a new version of WC is installed
+	 * Reset notices for themes when switched or a new version of tt is installed
 	 */
 	public function reset_admin_notices() {
+
 		if ( $this->has_frontend_colors() ) {
 			self::add_notice( 'frontend_colors' );
 		}
@@ -56,7 +57,7 @@ class WC_Admin_Notices {
 			self::add_notice( 'tracking' );
 		}
 
-		if ( ! current_theme_supports( 'woocommerce' ) && ! in_array( get_option( 'template' ), wc_get_core_supported_themes() ) ) {
+		if ( ! current_theme_supports( 'timetrader' ) && ! in_array( get_option( 'template' ), tt_get_core_supported_themes() ) ) {
 			self::add_notice( 'theme_support' );
 		}
 
@@ -68,8 +69,8 @@ class WC_Admin_Notices {
 	 * @param  string $name
 	 */
 	public static function add_notice( $name ) {
-		$notices = array_unique( array_merge( get_option( 'woocommerce_admin_notices', array() ), array( $name ) ) );
-		update_option( 'woocommerce_admin_notices', $notices );
+		$notices = array_unique( array_merge( get_option( 'timetrader_admin_notices', array() ), array( $name ) ) );
+		update_option( 'timetrader_admin_notices', $notices );
 	}
 
 	/**
@@ -77,8 +78,8 @@ class WC_Admin_Notices {
 	 * @param  string $name
 	 */
 	public static function remove_notice( $name ) {
-		$notices = array_diff( get_option( 'woocommerce_admin_notices', array() ), array( $name ) );
-		update_option( 'woocommerce_admin_notices', $notices );
+		$notices = array_diff( get_option( 'timetrader_admin_notices', array() ), array( $name ) );
+		update_option( 'timetrader_admin_notices', $notices );
 	}
 
 	/**
@@ -87,17 +88,17 @@ class WC_Admin_Notices {
 	 * @return boolean
 	 */
 	public static function has_notice( $name ) {
-		return in_array( $name, get_option( 'woocommerce_admin_notices', array() ) );
+		return in_array( $name, get_option( 'timetrader_admin_notices', array() ) );
 	}
 
 	/**
 	 * Hide a notice if the GET variable is set.
 	 */
 	public function hide_notices() {
-		if ( isset( $_GET['wc-hide-notice'] ) ) {
-			$hide_notice = sanitize_text_field( $_GET['wc-hide-notice'] );
+		if ( isset( $_GET['tt-hide-notice'] ) ) {
+			$hide_notice = sanitize_text_field( $_GET['tt-hide-notice'] );
 			self::remove_notice( $hide_notice );
-			do_action( 'woocommerce_hide_' . $hide_notice . '_notice' );
+			do_action( 'timetrader_hide_' . $hide_notice . '_notice' );
 		}
 	}
 
@@ -107,8 +108,8 @@ class WC_Admin_Notices {
 	public function hide_install_notice() {
 		// What's new redirect
 		if ( ! self::has_notice( 'update' ) ) {
-			delete_transient( '_wc_activation_redirect' );
-			wp_redirect( admin_url( 'index.php?page=wc-about&wc-updated=true' ) );
+			delete_transient( '_tt_activation_redirect' );
+			wp_redirect( admin_url( 'index.php?page=tt-about&tt-updated=true' ) );
 			exit;
 		}
 	}
@@ -117,32 +118,32 @@ class WC_Admin_Notices {
 	 * Delete colors option
 	 */
 	public function hide_frontend_colors_notice() {
-		delete_option( 'woocommerce_frontend_css_colors' );
+		delete_option( 'timetrader_frontend_css_colors' );
 	}
 
 	/**
 	 * Hide translation upgrade message
 	 */
 	public function hide_translation_upgrade_notice() {
-		update_option( 'woocommerce_language_pack_version', array( WC_VERSION , get_locale() ) );
+		update_option( 'timetrader_language_pack_version', array( TT_VERSION , get_locale() ) );
 	}
 
 	/**
 	 * Hide tracking notice
 	 */
 	public function hide_tracking_notice() {
-		update_option( 'woocommerce_allow_tracking', 'no' );
+		update_option( 'timetrader_allow_tracking', 'no' );
 	}
 
 	/**
 	 * Add notices + styles if needed.
 	 */
 	public function add_notices() {
-		$notices = get_option( 'woocommerce_admin_notices', array() );
+		$notices = get_option( 'timetrader_admin_notices', array() );
 
 		foreach ( $notices as $notice ) {
-			wp_enqueue_style( 'woocommerce-activation', plugins_url(  '/assets/css/activation.css', WC_PLUGIN_FILE ) );
-			wp_enqueue_script( 'wc-admin-notices' );
+			wp_enqueue_style( 'timetrader-activation', plugins_url(  '/assets/css/activation.css', WC_PLUGIN_FILE ) );
+			wp_enqueue_script( 'tt-admin-notices' );
 			add_action( 'admin_notices', array( $this, $this->notices[ $notice ] ) );
 		}
 	}
@@ -165,7 +166,7 @@ class WC_Admin_Notices {
 	 * Show the Theme Check notice
 	 */
 	public function theme_check_notice() {
-		if ( ! current_theme_supports( 'woocommerce' ) ) {
+		if ( ! current_theme_supports( 'timetrader' ) ) {
 			include( 'views/html-notice-theme-support.php' );
 		}
 	}
@@ -185,24 +186,24 @@ class WC_Admin_Notices {
 	 * Show a notice highlighting bad template files
 	 */
 	public function template_file_check_notice() {
-		$core_templates = WC_Admin_Status::scan_template_files( WC()->plugin_path() . '/templates' );
+		$core_templates = TT_Admin_Status::scan_template_files( TT()->plugin_path() . '/templates' );
 		$outdated       = false;
 
 		foreach ( $core_templates as $file ) {
 			$theme_file = false;
 			if ( file_exists( get_stylesheet_directory() . '/' . $file ) ) {
 				$theme_file = get_stylesheet_directory() . '/' . $file;
-			} elseif ( file_exists( get_stylesheet_directory() . '/woocommerce/' . $file ) ) {
-				$theme_file = get_stylesheet_directory() . '/woocommerce/' . $file;
+			} elseif ( file_exists( get_stylesheet_directory() . '/timetrader/' . $file ) ) {
+				$theme_file = get_stylesheet_directory() . '/timetrader/' . $file;
 			} elseif ( file_exists( get_template_directory() . '/' . $file ) ) {
 				$theme_file = get_template_directory() . '/' . $file;
-			} elseif( file_exists( get_template_directory() . '/woocommerce/' . $file ) ) {
-				$theme_file = get_template_directory() . '/woocommerce/' . $file;
+			} elseif( file_exists( get_template_directory() . '/timetrader/' . $file ) ) {
+				$theme_file = get_template_directory() . '/timetrader/' . $file;
 			}
 
 			if ( $theme_file ) {
-				$core_version  = WC_Admin_Status::get_file_version( WC()->plugin_path() . '/templates/' . $file );
-				$theme_version = WC_Admin_Status::get_file_version( $theme_file );
+				$core_version  = TT_Admin_Status::get_file_version( TT()->plugin_path() . '/templates/' . $file );
+				$theme_version = TT_Admin_Status::get_file_version( $theme_file );
 
 				if ( $core_version && $theme_version && version_compare( $theme_version, $core_version, '<' ) ) {
 					$outdated = true;
@@ -219,18 +220,18 @@ class WC_Admin_Notices {
 	}
 
 	/**
-	 * Checks if there is any change in woocommerce_frontend_css_colors
+	 * Checks if there is any change in timetrader_frontend_css_colors
 	 *
 	 * @return bool
 	 */
 	public function has_frontend_colors() {
-		$styles = (array) WC_Frontend_Scripts::get_styles();
+		$styles = (array) TT_Frontend_Scripts::get_styles();
 
-		if ( ! array_key_exists( 'woocommerce-general', $styles ) ) {
+		if ( ! array_key_exists( 'timetrader-general', $styles ) ) {
 			return false;
 		}
 
-		$colors  = get_option( 'woocommerce_frontend_css_colors' );
+		$colors  = get_option( 'timetrader_frontend_css_colors' );
 		$default = array(
 			'primary'    => '#ad74a2',
 			'secondary'  => '#f7f6f7',
@@ -258,14 +259,14 @@ class WC_Admin_Notices {
 	 * @return boolean
 	 */
 	public function has_not_confirmed_tracking() {
-		return 'unknown' === get_option( 'woocommerce_allow_tracking', 'unknown' );
+		return 'unknown' === get_option( 'timetrader_allow_tracking', 'unknown' );
 	}
 
 	/**
 	 * Notice to opt-in into tracking
 	 */
 	public function tracking_notice() {
-		if ( current_user_can( 'manage_woocommerce' ) ) {
+		if ( current_user_can( 'manage_timetrader' ) ) {
 			include( 'views/html-notice-tracking.php' );
 		}
 	}
@@ -275,18 +276,18 @@ class WC_Admin_Notices {
 	 * @return void
 	 */
 	public function check_optin_action() {
-		if ( ! isset( $_GET['wc_tracker_optin'] ) || ! isset( $_GET['wc_tracker_nonce'] ) || ! wp_verify_nonce( $_GET['wc_tracker_nonce'], 'wc_tracker_optin' ) ) {
+		if ( ! isset( $_GET['tt_tracker_optin'] ) || ! isset( $_GET['tt_tracker_nonce'] ) || ! wp_verify_nonce( $_GET['tt_tracker_nonce'], 'tt_tracker_optin' ) ) {
 			return;
 		}
 		// Enable tracking
-		update_option( 'woocommerce_allow_tracking', 'yes' );
+		update_option( 'timetrader_allow_tracking', 'yes' );
 
 		// Remove notice
 		self::remove_notice( 'tracking' );
 
 		// Trigger the first track
-		WC_Tracker::send_tracking_data( true );
+		TT_Tracker::send_tracking_data( true );
 	}
 }
 
-new WC_Admin_Notices();
+new TT_Admin_Notices();
