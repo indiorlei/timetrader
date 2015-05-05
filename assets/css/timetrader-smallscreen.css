@@ -1,0 +1,174 @@
+.timetrader table.shop_table_responsive thead,
+.timetrader-page table.shop_table_responsive thead {
+	display: none
+}
+.timetrader table.shop_table_responsive tbody tr:first-child td:first-child,
+.timetrader-page table.shop_table_responsive tbody tr:first-child td:first-child {
+	border-top: 0
+}
+.timetrader table.shop_table_responsive tbody th,
+.timetrader-page table.shop_table_responsive tbody th {
+	display: none
+}
+.timetrader table.shop_table_responsive tr,
+.timetrader table.shop_table_responsive tr td,
+.timetrader-page table.shop_table_responsive tr,
+.timetrader-page table.shop_table_responsive tr td {
+	display: block
+}
+.timetrader table.shop_table_responsive tr td:before,
+.timetrader-page table.shop_table_responsive tr td:before {
+	content: attr(data-title) ":";
+	font-weight: 700
+}
+.timetrader table.shop_table_responsive tr:nth-child(2n) td,
+.timetrader-page table.shop_table_responsive tr:nth-child(2n) td {
+	background-color: rgba(0, 0, 0, .025)
+}
+.timetrader table.my_account_orders tr td.order-actions,
+.timetrader-page table.my_account_orders tr td.order-actions {
+	text-align: left
+}
+.timetrader table.my_account_orders tr td.order-actions:before,
+.timetrader-page table.my_account_orders tr td.order-actions:before {
+	display: none
+}
+.timetrader table.my_account_orders tr td.order-actions .button,
+.timetrader-page table.my_account_orders tr td.order-actions .button {
+	float: none;
+	margin: .125em .25em .125em 0
+}
+.timetrader .col2-set .col-1,
+.timetrader .col2-set .col-2,
+.timetrader-page .col2-set .col-1,
+.timetrader-page .col2-set .col-2 {
+	float: none;
+	width: 100%
+}
+.timetrader ul.products li.product,
+.timetrader-page ul.products li.product {
+	width: 48%;
+	float: left;
+	clear: both;
+	margin: 0 0 2.992em
+}
+.timetrader ul.products li.product:nth-child(2n),
+.timetrader-page ul.products li.product:nth-child(2n) {
+	float: right;
+	clear: none !important
+}
+.timetrader #content div.product div.images,
+.timetrader #content div.product div.summary,
+.timetrader div.product div.images,
+.timetrader div.product div.summary,
+.timetrader-page #content div.product div.images,
+.timetrader-page #content div.product div.summary,
+.timetrader-page div.product div.images,
+.timetrader-page div.product div.summary {
+	float: none;
+	width: 100%
+}
+.timetrader #content table.cart .product-thumbnail,
+.timetrader table.cart .product-thumbnail,
+.timetrader-page #content table.cart .product-thumbnail,
+.timetrader-page table.cart .product-thumbnail {
+	display: none
+}
+.timetrader #content table.cart td.actions,
+.timetrader table.cart td.actions,
+.timetrader-page #content table.cart td.actions,
+.timetrader-page table.cart td.actions {
+	text-align: left
+}
+.timetrader #content table.cart td.actions .coupon,
+.timetrader table.cart td.actions .coupon,
+.timetrader-page #content table.cart td.actions .coupon,
+.timetrader-page table.cart td.actions .coupon {
+	float: none;
+	padding-bottom: .5em
+}
+.timetrader #content table.cart td.actions .coupon:after,
+.timetrader #content table.cart td.actions .coupon:before,
+.timetrader table.cart td.actions .coupon:after,
+.timetrader table.cart td.actions .coupon:before,
+.timetrader-page #content table.cart td.actions .coupon:after,
+.timetrader-page #content table.cart td.actions .coupon:before,
+.timetrader-page table.cart td.actions .coupon:after,
+.timetrader-page table.cart td.actions .coupon:before {
+	content: " ";
+	display: table
+}
+.timetrader #content table.cart td.actions .coupon:after,
+.timetrader table.cart td.actions .coupon:after,
+.timetrader-page #content table.cart td.actions .coupon:after,
+.timetrader-page table.cart td.actions .coupon:after {
+	clear: both
+}
+.timetrader #content table.cart td.actions .button,
+.timetrader #content table.cart td.actions .input-text,
+.timetrader #content table.cart td.actions input,
+.timetrader table.cart td.actions .button,
+.timetrader table.cart td.actions .input-text,
+.timetrader table.cart td.actions input,
+.timetrader-page #content table.cart td.actions .button,
+.timetrader-page #content table.cart td.actions .input-text,
+.timetrader-page #content table.cart td.actions input,
+.timetrader-page table.cart td.actions .button,
+.timetrader-page table.cart td.actions .input-text,
+.timetrader-page table.cart td.actions input {
+	width: 48%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box
+}
+.timetrader #content table.cart td.actions .button.alt,
+.timetrader #content table.cart td.actions .input-text+.button,
+.timetrader table.cart td.actions .button.alt,
+.timetrader table.cart td.actions .input-text+.button,
+.timetrader-page #content table.cart td.actions .button.alt,
+.timetrader-page #content table.cart td.actions .input-text+.button,
+.timetrader-page table.cart td.actions .button.alt,
+.timetrader-page table.cart td.actions .input-text+.button {
+	float: right
+}
+.timetrader .cart-collaterals .cart_totals,
+.timetrader .cart-collaterals .cross-sells,
+.timetrader .cart-collaterals .shipping_calculator,
+.timetrader-page .cart-collaterals .cart_totals,
+.timetrader-page .cart-collaterals .cross-sells,
+.timetrader-page .cart-collaterals .shipping_calculator {
+	width: 100%;
+	float: none;
+	text-align: left
+}
+.timetrader-page.timetrader-checkout form.login .form-row,
+.timetrader.timetrader-checkout form.login .form-row {
+	width: 100%;
+	float: none
+}
+.timetrader #payment .terms,
+.timetrader-page #payment .terms {
+	text-align: left;
+	padding: 0
+}
+.timetrader #payment #place_order,
+.timetrader-page #payment #place_order {
+	float: none;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-bottom: 1em
+}
+.timetrader .lost_reset_password .form-row-first,
+.timetrader .lost_reset_password .form-row-last,
+.timetrader-page .lost_reset_password .form-row-first,
+.timetrader-page .lost_reset_password .form-row-last {
+	width: 100%;
+	float: none;
+	margin-right: 0
+}
+.single-product .twentythirteen .panel {
+	padding-left: 20px !important;
+	padding-right: 20px !important
+}
