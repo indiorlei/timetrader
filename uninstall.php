@@ -15,12 +15,11 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 $status_options = get_option( 'timetrader_status_options', array() );
 
 if ( ! empty( $status_options['uninstall_data'] ) ) {
-
 	global $wpdb;
 
 	// Roles + caps
-	include_once( 'includes/class-install.php' );
-	TT_Install::remove_roles();
+	include_once( 'class/install.php' );
+	TimeInstall::remove_roles();
 
 	// // Pages
 	// wp_trash_post( get_option( 'woocommerce_shop_page_id' ) );
