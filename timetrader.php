@@ -21,25 +21,42 @@ if ( ! class_exists( 'TimeTrader' ) ) :
 */
 final class TimeTrader {
 	public $version = '0.1';
+	protected static $_instance = null;
+	public $session = null;
+	public $query = null;
+	
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
 
-	/**
-	 * TimeTrader Constructor.
-	 */
 	public function __construct() {
+
+
+
+
+
 		$this->define_constants();
 		$this->includes();
-		$this->init_hooks();
+		$this->init_hooks();// GERANDO ERRO VERIFICAR
 
-		do_action( 'timetrader_loaded' );
+		// do_action( 'timetrader_loaded' );
 	}
 
 	private function init_hooks() {
-		register_activation_hook( __FILE__, array( 'TT_Install', 'install' ) );
-		add_action( 'after_setup_theme', array( $this, 'setup_environment' ) );
-		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
-		add_action( 'init', array( $this, 'init' ), 0 );
-		add_action( 'init', array( 'TT_Shortcodes', 'init' ) );
-		add_action( 'init', array( 'TT_Emails', 'init_transactional_emails' ) );
+		// GERANDO ERRO VERIFICAR
+		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TimeTrader' does not have a method 'setup_environment' in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
+		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TT_Shortcodes' not found in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
+		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TT_Emails' not found in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
+
+		// register_activation_hook( __FILE__, array( 'TimetraderInstall', 'install' ) );
+		// add_action( 'after_setup_theme', array( $this, 'setup_environment' ) );
+		// add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
+		// add_action( 'init', array( $this, 'init' ), 0 );
+		// add_action( 'init', array( 'TT_Shortcodes', 'init' ) );
+		// add_action( 'init', array( 'TT_Emails', 'init_transactional_emails' ) );
 	}
 
 	/**
@@ -58,39 +75,31 @@ final class TimeTrader {
 		$this->define( 'TT_LOG_DIR', $upload_dir['basedir'] . '/tt-logs/' );
 	}
 
-	/**
-	 * Define constant if not already set
-	 * @param  string $name
-	 * @param  string|bool $value
-	 */
 	private function define( $name, $value ) {
 		if ( ! defined( $name ) ) {
 			define( $name, $value );
 		}
 	}
 
-	/**
-	 * What type of request is this?
-	 * string $type ajax, frontend or admin
-	 * @return bool
-	 */
 	private function is_request( $type ) {
-		switch ( $type ) {
-			case 'admin' :
-				return is_admin();
-			case 'ajax' :
-				return defined( 'DOING_AJAX' );
-			case 'cron' :
-				return defined( 'DOING_CRON' );
-			case 'frontend' :
-				return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
-		}
+		// switch ( $type ) {
+		// 	case 'admin' :
+		// 		return is_admin();
+		// 	case 'ajax' :
+		// 		return defined( 'DOING_AJAX' );
+		// 	case 'cron' :
+		// 		return defined( 'DOING_CRON' );
+		// 	case 'frontend' :
+		// 		return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
+		// }
 	}
 
 	/**
 	 * Include required core files used in admin and on the frontend.
 	 */
 	public function includes() {
+		
+		include_once( 'class/install.php' );
 
 		// include_once( 'includes/class-wc-autoloader.php' );
 		// include_once( 'includes/wc-core-functions.php' );
@@ -197,8 +206,8 @@ final class TimeTrader {
 
 		// $this->load_webhooks();
 
-		// // Init action
-		// do_action( 'woocommerce_init' );
+		// Init action
+		// do_action( 'timetrader_init' );
 	}
 
 	
@@ -208,10 +217,10 @@ final class TimeTrader {
 	 * Ensure post thumbnail support is turned on
 	 */
 	private function add_thumbnail_support() {
-		if ( ! current_theme_supports( 'post-thumbnails' ) ) {
-			add_theme_support( 'post-thumbnails' );
-		}
-		add_post_type_support( 'product', 'thumbnail' );
+		// if ( ! current_theme_supports( 'post-thumbnails' ) ) {
+		// 	add_theme_support( 'post-thumbnails' );
+		// }
+		// add_post_type_support( 'product', 'thumbnail' );
 	}
 
 	/**
@@ -255,7 +264,7 @@ final class TimeTrader {
 	 * @return string
 	 */
 	public function plugin_url() {
-		return untrailingslashit( plugins_url( '/', __FILE__ ) );
+		// return untrailingslashit( plugins_url( '/', __FILE__ ) );
 	}
 
 	/**
@@ -263,7 +272,7 @@ final class TimeTrader {
 	 * @return string
 	 */
 	public function plugin_path() {
-		return untrailingslashit( plugin_dir_path( __FILE__ ) );
+		// return untrailingslashit( plugin_dir_path( __FILE__ ) );
 	}
 
 	/**
@@ -271,7 +280,7 @@ final class TimeTrader {
 	 * @return string
 	 */
 	public function template_path() {
-		return apply_filters( 'timetrader_template_path', 'timetrader/' );
+		// return apply_filters( 'timetrader_template_path', 'timetrader/' );
 	}
 
 	/**
@@ -279,98 +288,13 @@ final class TimeTrader {
 	 * @return string
 	 */
 	public function ajax_url() {
-		return admin_url( 'admin-ajax.php', 'relative' );
+		// return admin_url( 'admin-ajax.php', 'relative' );
 	}
 
-	/**
-	 * Return the WC API URL for a given request
-	 *
-	 * @param string $request
-	 * @param mixed $ssl (default: null)
-	 * @return string
-	 */
-	public function api_request_url( $request, $ssl = null ) {
-		// if ( is_null( $ssl ) ) {
-		// 	$scheme = parse_url( home_url(), PHP_URL_SCHEME );
-		// } elseif ( $ssl ) {
-		// 	$scheme = 'https';
-		// } else {
-		// 	$scheme = 'http';
-		// }
-
-		// if ( strstr( get_option( 'permalink_structure' ), '/index.php/' ) ) {
-		// 	$api_request_url = trailingslashit( home_url( '/index.php/wc-api/' . $request, $scheme ) );
-		// } elseif ( get_option( 'permalink_structure' ) ) {
-		// 	$api_request_url = trailingslashit( home_url( '/wc-api/' . $request, $scheme ) );
-		// } else {
-		// 	$api_request_url = add_query_arg( 'wc-api', $request, trailingslashit( home_url( '', $scheme ) ) );
-		// }
-
-		// return esc_url_raw( $api_request_url );
-	}
-
-	/**
-	 * Load & enqueue active webhooks
-	 *
-	 * @since 2.2
-	 */
-	private function load_webhooks() {
-		// if ( false === ( $webhooks = get_transient( 'woocommerce_webhook_ids' ) ) ) {
-		// 	$webhooks = get_posts( array(
-		// 		'fields'         => 'ids',
-		// 		'post_type'      => 'shop_webhook',
-		// 		'post_status'    => 'publish',
-		// 		'posts_per_page' => -1
-		// 	) );
-		// 	set_transient( 'woocommerce_webhook_ids', $webhooks );
-		// }
-		// foreach ( $webhooks as $webhook_id ) {
-		// 	$webhook = new WC_Webhook( $webhook_id );
-		// 	$webhook->enqueue();
-		// }
-	}
-
-	/**
-	 * Get Checkout Class.
-	 * @return WC_Checkout
-	 */
-	public function checkout() {
-		// return WC_Checkout::instance();
-	}
-
-	/**
-	 * Get gateways class
-	 * @return WC_Payment_Gateways
-	 */
-	public function payment_gateways() {
-		// return WC_Payment_Gateways::instance();
-	}
-
-	/**
-	 * Get shipping class
-	 * @return WC_Shipping
-	 */
-	public function shipping() {
-		// return WC_Shipping::instance();
-	}
-
-	/**
-	 * Email Class.
-	 * @return WC_Emails
-	 */
-	public function mailer() {
-		// return WC_Emails::instance();
-	}
 }
 
 endif;
 
-/**
- * Returns the main instance of WC to prevent the need to use globals.
- *
- * @since  2.1
- * @return TimeTrader
- */
 function TT() {
 	return TimeTrader::instance();
 }
