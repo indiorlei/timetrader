@@ -1,2 +1,3 @@
 # timetrader
-Plugin Wordpress
+
+Plugin Wordpress para marcações de horários
