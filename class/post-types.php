@@ -33,55 +33,53 @@ class TimeTrader_PostTypes {
 		}
 
 		do_action( 'timetrader_register_taxonomy' );
-
 		$permalinks = get_option( 'timetrader_permalinks' );
 
-		register_taxonomy( 'product_type',
-			apply_filters( 'timetrader_taxonomy_objects_product_type', array( 'product' ) ),
-			apply_filters( 'timetrader_taxonomy_args_product_type', array(
-				'hierarchical'      => false,
-				'show_ui'           => false,
-				'show_in_nav_menus' => false,
-				'query_var'         => is_admin(),
-				'rewrite'           => false,
-				'public'            => false
-			) )
-		);
+		// register_taxonomy( 'product_type',
+		// 	apply_filters( 'timetrader_taxonomy_objects_product_type', array( 'product' ) ),
+		// 	apply_filters( 'timetrader_taxonomy_args_product_type', array(
+		// 		'hierarchical'      => false,
+		// 		'show_ui'           => false,
+		// 		'show_in_nav_menus' => false,
+		// 		'query_var'         => is_admin(),
+		// 		'rewrite'           => false,
+		// 		'public'            => false
+		//    );
 
-		register_taxonomy( 'product_cat',
-			apply_filters( 'timetrader_taxonomy_objects_product_cat', array( 'product' ) ),
-			apply_filters( 'timetrader_taxonomy_args_product_cat', array(
-				'hierarchical'          => true,
-				'update_count_callback' => '_wc_term_recount',
-				'label'                 => __( 'Product Categories', 'timetrader' ),
-				'labels' => array(
-						'name'              => __( 'Product Categories', 'timetrader' ),
-						'singular_name'     => __( 'Product Category', 'timetrader' ),
-						'menu_name'         => _x( 'Categories', 'Admin menu name', 'timetrader' ),
-						'search_items'      => __( 'Search Product Categories', 'timetrader' ),
-						'all_items'         => __( 'All Product Categories', 'timetrader' ),
-						'parent_item'       => __( 'Parent Product Category', 'timetrader' ),
-						'parent_item_colon' => __( 'Parent Product Category:', 'timetrader' ),
-						'edit_item'         => __( 'Edit Product Category', 'timetrader' ),
-						'update_item'       => __( 'Update Product Category', 'timetrader' ),
-						'add_new_item'      => __( 'Add New Product Category', 'timetrader' ),
-						'new_item_name'     => __( 'New Product Category Name', 'timetrader' )
-					),
-				'show_ui'               => true,
-				'query_var'             => true,
-				'capabilities'          => array(
-					'manage_terms' => 'manage_product_terms',
-					'edit_terms'   => 'edit_product_terms',
-					'delete_terms' => 'delete_product_terms',
-					'assign_terms' => 'assign_product_terms',
-				),
-				'rewrite'               => array(
-					'slug'         => empty( $permalinks['category_base'] ) ? _x( 'product-category', 'slug', 'timetrader' ) : $permalinks['category_base'],
-					'with_front'   => false,
-					'hierarchical' => true,
-				),
-			) )
-		);
+		// register_taxonomy( 'product_cat',
+		// 	apply_filters( 'timetrader_taxonomy_objects_product_cat', array( 'product' ) ),
+		// 	apply_filters( 'timetrader_taxonomy_args_product_cat', array(
+		// 		'hierarchical'          => true,
+		// 		'update_count_callback' => '_wc_term_recount',
+		// 		'label'                 => __( 'Product Categories', 'timetrader' ),
+		// 		'labels' => array(
+		// 				'name'              => __( 'Product Categories', 'timetrader' ),
+		// 				'singular_name'     => __( 'Product Category', 'timetrader' ),
+		// 				'menu_name'         => _x( 'Categories', 'Admin menu name', 'timetrader' ),
+		// 				'search_items'      => __( 'Search Product Categories', 'timetrader' ),
+		// 				'all_items'         => __( 'All Product Categories', 'timetrader' ),
+		// 				'parent_item'       => __( 'Parent Product Category', 'timetrader' ),
+		// 				'parent_item_colon' => __( 'Parent Product Category:', 'timetrader' ),
+		// 				'edit_item'         => __( 'Edit Product Category', 'timetrader' ),
+		// 				'update_item'       => __( 'Update Product Category', 'timetrader' ),
+		// 				'add_new_item'      => __( 'Add New Product Category', 'timetrader' ),
+		// 				'new_item_name'     => __( 'New Product Category Name', 'timetrader' )
+		// 			),
+		// 		'show_ui'               => true,
+		// 		'query_var'             => true,
+		// 		'capabilities'          => array(
+		// 			'manage_terms' => 'manage_product_terms',
+		// 			'edit_terms'   => 'edit_product_terms',
+		// 			'delete_terms' => 'delete_product_terms',
+		// 			'assign_terms' => 'assign_product_terms',
+		// 		),
+		// 		'rewrite'               => array(
+		// 			'slug'         => empty( $permalinks['category_base'] ) ? _x( 'product-category', 'slug', 'timetrader' ) : $permalinks['category_base'],
+		// 			'with_front'   => false,
+		// 			'hierarchical' => true,
+		// 		),
+		// 	) )
+		// );
 
 		// register_taxonomy( 'product_tag',
 		// 	apply_filters( 'timetrader_taxonomy_objects_product_tag', array( 'product' ) ),
@@ -153,7 +151,6 @@ class TimeTrader_PostTypes {
 		// );
 
 		global $wc_product_attributes;
-
 		$wc_product_attributes = array();
 
 		// if ( $attribute_taxonomies = wc_get_attribute_taxonomies() ) {
@@ -221,14 +218,6 @@ class TimeTrader_PostTypes {
 
 		$permalinks        = get_option( 'timetrader_permalinks' );
 		$product_permalink = empty( $permalinks['product_base'] ) ? _x( 'product', 'slug', 'timetrader' ) : $permalinks['product_base'];
-
-		register_taxonomy('cores', 'post', array(
-			'hierarchical' => true,
-			'label' => 'Cores',
-			'query_var' => true,
-			'rewrite' => true
-			)
-		);
 
 		// register_post_type( 'product',
 		// 	apply_filters( 'timetrader_register_post_type_product',
@@ -414,62 +403,62 @@ class TimeTrader_PostTypes {
 	 * Register our custom post statuses, used for order status.
 	 */
 	public static function register_post_status() {
-		register_post_status( 'wc-pending', array(
-			'label'                     => _x( 'Pending payment', 'Order status', 'timetrader' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'label_count'               => _n_noop( 'Pending payment <span class="count">(%s)</span>', 'Pending payment <span class="count">(%s)</span>', 'timetrader' )
-		) );
-		register_post_status( 'wc-processing', array(
-			'label'                     => _x( 'Processing', 'Order status', 'timetrader' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'label_count'               => _n_noop( 'Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>', 'timetrader' )
-		) );
-		register_post_status( 'wc-on-hold', array(
-			'label'                     => _x( 'On hold', 'Order status', 'timetrader' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'label_count'               => _n_noop( 'On hold <span class="count">(%s)</span>', 'On hold <span class="count">(%s)</span>', 'timetrader' )
-		) );
-		register_post_status( 'wc-completed', array(
-			'label'                     => _x( 'Completed', 'Order status', 'timetrader' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'label_count'               => _n_noop( 'Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>', 'timetrader' )
-		) );
-		register_post_status( 'wc-cancelled', array(
-			'label'                     => _x( 'Cancelled', 'Order status', 'timetrader' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'label_count'               => _n_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'timetrader' )
-		) );
-		register_post_status( 'wc-refunded', array(
-			'label'                     => _x( 'Refunded', 'Order status', 'timetrader' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'timetrader' )
-		) );
-		register_post_status( 'wc-failed', array(
-			'label'                     => _x( 'Failed', 'Order status', 'timetrader' ),
-			'public'                    => false,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => true,
-			'show_in_admin_status_list' => true,
-			'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'timetrader' )
-		) );
+		// register_post_status( 'wc-pending', array(
+		// 	'label'                     => _x( 'Pending payment', 'Order status', 'timetrader' ),
+		// 	'public'                    => false,
+		// 	'exclude_from_search'       => false,
+		// 	'show_in_admin_all_list'    => true,
+		// 	'show_in_admin_status_list' => true,
+		// 	'label_count'               => _n_noop( 'Pending payment <span class="count">(%s)</span>', 'Pending payment <span class="count">(%s)</span>', 'timetrader' )
+		// ) );
+		// register_post_status( 'wc-processing', array(
+		// 	'label'                     => _x( 'Processing', 'Order status', 'timetrader' ),
+		// 	'public'                    => false,
+		// 	'exclude_from_search'       => false,
+		// 	'show_in_admin_all_list'    => true,
+		// 	'show_in_admin_status_list' => true,
+		// 	'label_count'               => _n_noop( 'Processing <span class="count">(%s)</span>', 'Processing <span class="count">(%s)</span>', 'timetrader' )
+		// ) );
+		// register_post_status( 'wc-on-hold', array(
+		// 	'label'                     => _x( 'On hold', 'Order status', 'timetrader' ),
+		// 	'public'                    => false,
+		// 	'exclude_from_search'       => false,
+		// 	'show_in_admin_all_list'    => true,
+		// 	'show_in_admin_status_list' => true,
+		// 	'label_count'               => _n_noop( 'On hold <span class="count">(%s)</span>', 'On hold <span class="count">(%s)</span>', 'timetrader' )
+		// ) );
+		// register_post_status( 'wc-completed', array(
+		// 	'label'                     => _x( 'Completed', 'Order status', 'timetrader' ),
+		// 	'public'                    => false,
+		// 	'exclude_from_search'       => false,
+		// 	'show_in_admin_all_list'    => true,
+		// 	'show_in_admin_status_list' => true,
+		// 	'label_count'               => _n_noop( 'Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>', 'timetrader' )
+		// ) );
+		// register_post_status( 'wc-cancelled', array(
+		// 	'label'                     => _x( 'Cancelled', 'Order status', 'timetrader' ),
+		// 	'public'                    => false,
+		// 	'exclude_from_search'       => false,
+		// 	'show_in_admin_all_list'    => true,
+		// 	'show_in_admin_status_list' => true,
+		// 	'label_count'               => _n_noop( 'Cancelled <span class="count">(%s)</span>', 'Cancelled <span class="count">(%s)</span>', 'timetrader' )
+		// ) );
+		// register_post_status( 'wc-refunded', array(
+		// 	'label'                     => _x( 'Refunded', 'Order status', 'timetrader' ),
+		// 	'public'                    => false,
+		// 	'exclude_from_search'       => false,
+		// 	'show_in_admin_all_list'    => true,
+		// 	'show_in_admin_status_list' => true,
+		// 	'label_count'               => _n_noop( 'Refunded <span class="count">(%s)</span>', 'Refunded <span class="count">(%s)</span>', 'timetrader' )
+		// ) );
+		// register_post_status( 'wc-failed', array(
+		// 	'label'                     => _x( 'Failed', 'Order status', 'timetrader' ),
+		// 	'public'                    => false,
+		// 	'exclude_from_search'       => false,
+		// 	'show_in_admin_all_list'    => true,
+		// 	'show_in_admin_status_list' => true,
+		// 	'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'timetrader' )
+		// ) );
 	}
 
 	/**
@@ -480,6 +469,7 @@ class TimeTrader_PostTypes {
 			new Jetpack_Omnisearch_Posts( 'product' );
 		}
 	}
+
 }
 
 TimeTrader_PostTypes::init();

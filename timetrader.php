@@ -50,6 +50,7 @@ final class TimeTrader {
 	}
 
 	private function define_constants() {
+
 		$upload_dir = wp_upload_dir();
 
 		$this->define( 'TT_PLUGIN_FILE', __FILE__ );
@@ -60,6 +61,7 @@ final class TimeTrader {
 		$this->define( 'TT_TAX_ROUNDING_MODE', 'yes' === get_option( 'timetrader_prices_include_tax', 'no' ) ? 2 : 1 );
 		$this->define( 'TT_DELIMITER', '|' );
 		$this->define( 'TT_LOG_DIR', $upload_dir['basedir'] . '/tt-logs/' );
+
 	}
 
 	private function define( $name, $value ) {
@@ -69,6 +71,7 @@ final class TimeTrader {
 	}
 
 	private function is_request( $type ) {
+
 		// switch ( $type ) {
 		// 	case 'admin' :
 		// 		return is_admin();
@@ -79,6 +82,7 @@ final class TimeTrader {
 		// 	case 'frontend' :
 		// 		return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
 		// }
+
 	}
 
 	/**
