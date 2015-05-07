@@ -6,6 +6,7 @@
  * @version     0.1
  */
 
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -16,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TimetraderInstall {
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'check_version' ), 5 );
-		// add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
+		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
 		// add_action( 'in_plugin_update_message-woocommerce/woocommerce.php', array( __CLASS__, 'in_plugin_update_message' ) );
 		// add_filter( 'plugin_action_links_' . WC_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 		// add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
@@ -32,45 +33,44 @@ class TimetraderInstall {
 
 	}
 
-	/**
-	 * Install actions such as installing pages when a button is clicked.
-	 */
 	public static function install_actions() {
-		// // Install - Add pages button
-		// if ( ! empty( $_GET['install_woocommerce_pages'] ) ) {
+		// Install - Add pages button
 
-		// 	self::create_pages();
+		if ( ! empty( $_GET['install_timetrader_pages'] ) ) {
 
-		// 	// We no longer need to install pages
-		// 	WC_Admin_Notices::remove_notice( 'install' );
+			self::create_pages();
 
-		// 	// What's new redirect
-		// 	if ( ! WC_Admin_Notices::has_notice( 'update' ) ) {
-		// 		delete_transient( '_wc_activation_redirect' );
-		// 		wp_redirect( admin_url( 'index.php?page=wc-about&wc-updated=true' ) );
-		// 		exit;
-		// 	}
+			// // We no longer need to install pages
+			// WC_Admin_Notices::remove_notice( 'install' );
 
-		// // Update button
-		// } elseif ( ! empty( $_GET['do_update_woocommerce'] ) ) {
+			// // What's new redirect
+			// if ( ! WC_Admin_Notices::has_notice( 'update' ) ) {
+			// 	delete_transient( '_wc_activation_redirect' );
+			// 	wp_redirect( admin_url( 'index.php?page=wc-about&wc-updated=true' ) );
+			// 	exit;
+			// }
 
-		// 	self::update();
+		// Update button
+		} elseif ( ! empty( $_GET['do_update_timetrader'] ) ) {
 
-		// 	// Update complete
-		// 	WC_Admin_Notices::remove_notice( 'update' );
+			self::update();
 
-		// 	// What's new redirect
-		// 	if ( ! WC_Admin_Notices::has_notice( 'install' ) ) {
-		// 		delete_transient( '_wc_activation_redirect' );
-		// 		wp_redirect( admin_url( 'index.php?page=wc-about&wc-updated=true' ) );
-		// 		exit;
-		// 	}
-		// }
+			// // Update complete
+			// WC_Admin_Notices::remove_notice( 'update' );
+
+			// // What's new redirect
+			// if ( ! WC_Admin_Notices::has_notice( 'install' ) ) {
+			// 	delete_transient( '_wc_activation_redirect' );
+			// 	wp_redirect( admin_url( 'index.php?page=wc-about&wc-updated=true' ) );
+			// 	exit;
+			// }
+		}
+	
 	}
 
 	/**
-	 * Install WC
-	 */
+	* Install timetrader
+	*/
 	public static function install() {
 
 		if ( ! defined( 'TT_INSTALLING' ) ) {

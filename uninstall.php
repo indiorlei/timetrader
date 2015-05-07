@@ -36,5 +36,4 @@ if ( ! empty( $status_options['uninstall_data'] ) ) {
 	// $wpdb->query( "DELETE meta FROM {$wpdb->postmeta} meta LEFT JOIN {$wpdb->posts} posts ON posts.ID = meta.post_id WHERE posts.ID IS NULL;" );
 	// $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "timetrader_order_items" );
 	// $wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "timetrader_order_itemmeta" );
-
 }

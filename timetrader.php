@@ -10,11 +10,13 @@ Requires at least: 4.0
 Tested up to: 4.2
 License: GPLv2
 */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
 if ( ! class_exists( 'TimeTrader' ) ) :
+
 /**
 * Main TimeTrader Class
 *
