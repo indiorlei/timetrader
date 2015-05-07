@@ -159,7 +159,7 @@ final class TimeTrader {
 	 * Function used to Init timetrader Template Functions - This makes them pluggable by plugins and themes.
 	 */
 	public function include_template_functions() {
-		// include_once( 'includes/wc-template-functions.php' );
+		include_once( 'class/template-functions.php' );
 	}
 
 	/**
