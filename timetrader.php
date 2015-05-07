@@ -35,28 +35,18 @@ final class TimeTrader {
 	public function __construct() {
 		$this->define_constants();
 		$this->includes();
-		$this->init_hooks();// GERANDO ERRO VERIFICAR
+		$this->init_hooks();
 
-		// do_action( 'timetrader_loaded' );
+		do_action( 'timetrader_loaded' );
 	}
 
 	private function init_hooks() {
-		// GERANDO ERRO VERIFICAR
-		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TimeTrader' does not have a method 'setup_environment' in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
-		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TT_Shortcodes' not found in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
-		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TT_Emails' not found in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
-
 		register_activation_hook( __FILE__, array( 'TimetraderInstall', 'install' ) );
 		// add_action( 'after_setup_theme', array( $this, 'setup_environment' ) );
-		// add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
-		// add_action( 'init', array( $this, 'init' ), 0 );
-		// add_action( 'init', array( 'TT_Shortcodes', 'init' ) );
-		// add_action( 'init', array( 'TT_Emails', 'init_transactional_emails' ) );
+		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
+		add_action( 'init', array( $this, 'init' ), 0 );
 	}
 
-	/**
-	 * Define TT Constants
-	 */
 	private function define_constants() {
 		$upload_dir = wp_upload_dir();
 
@@ -118,7 +108,7 @@ final class TimeTrader {
 		// 	$this->frontend_includes();
 		// }
 
-		// if ( $this->is_request( 'cron' ) && 'yes' === get_option( 'woocommerce_allow_tracking', 'no' ) ) {
+		// if ( $this->is_request( 'cron' ) && 'yes' === get_option( 'timetrader_allow_tracking', 'no' ) ) {
 		// 	include_once( 'includes/class-wc-tracker.php' );
 		// }
 
@@ -166,18 +156,18 @@ final class TimeTrader {
 	}
 
 	/**
-	 * Function used to Init WooCommerce Template Functions - This makes them pluggable by plugins and themes.
+	 * Function used to Init timetrader Template Functions - This makes them pluggable by plugins and themes.
 	 */
 	public function include_template_functions() {
 		// include_once( 'includes/wc-template-functions.php' );
 	}
 
 	/**
-	 * Init WooCommerce when WordPress Initialises.
+	 * Init timetrader when WordPress Initialises.
 	 */
 	public function init() {
 		// // Before init action
-		// do_action( 'before_woocommerce_init' );
+		// do_action( 'before_timetrader_init' );
 
 		// // Set up localisation
 		// $this->load_plugin_textdomain();
@@ -191,7 +181,7 @@ final class TimeTrader {
 		// // Classes/actions loaded for the frontend and for ajax requests
 		// if ( $this->is_request( 'frontend' ) ) {
 		// 	// Session class, handles session data for users - can be overwritten if custom handler is needed
-		// 	$session_class = apply_filters( 'woocommerce_session_handler', 'WC_Session_Handler' );
+		// 	$session_class = apply_filters( 'timetrader_session_handler', 'WC_Session_Handler' );
 
 		// 	// Class instances
 		// 	$this->session  = new $session_class();
