@@ -85,8 +85,9 @@ final class TimeTrader {
 	 * Include required core files used in admin and on the frontend.
 	 */
 	public function includes() {
-		
+
 		include_once( 'class/install.php' );
+		include_once( 'class/post-types.php' ); // Registers post types
 
 		// include_once( 'includes/class-wc-autoloader.php' );
 		// include_once( 'includes/wc-core-functions.php' );

@@ -6,7 +6,6 @@
  * @version     0.1
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -85,14 +84,14 @@ class TimetraderInstall {
 		self::create_roles();
 
 		// // Register post types
-		// WC_Post_types::register_post_types();
-		// WC_Post_types::register_taxonomies();
+		TimeTrader_PostTypes::register_post_types();
+		TimeTrader_PostTypes::register_taxonomies();
 
 		// // Also register endpoints - this needs to be done prior to rewrite rule flush
 		// WC()->query->init_query_vars();
 		// WC()->query->add_endpoints();
 
-		// self::create_terms();
+		self::create_terms();
 		// self::create_cron_jobs();
 		// self::create_files();
 
@@ -178,39 +177,41 @@ class TimetraderInstall {
 		// wp_schedule_event( time(), apply_filters( 'woocommerce_tracker_event_recurrence', 'daily' ), 'woocommerce_tracker_send_event' );
 	}
 
+	
 	/**
-	 * Create pages that the plugin relies on, storing page id's in variables.
-	 */
+	* Create pages that the plugin relies on, storing page id's in variables.
+	*/
 	public static function create_pages() {
 		// include_once( 'admin/wc-admin-functions.php' );
 
-		// $pages = apply_filters( 'woocommerce_create_pages', array(
-		// 	'shop' => array(
-		// 		'name'    => _x( 'shop', 'Page slug', 'woocommerce' ),
-		// 		'title'   => _x( 'Shop', 'Page title', 'woocommerce' ),
-		// 		'content' => ''
-		// 	),
-		// 	'cart' => array(
-		// 		'name'    => _x( 'cart', 'Page slug', 'woocommerce' ),
-		// 		'title'   => _x( 'Cart', 'Page title', 'woocommerce' ),
-		// 		'content' => '[' . apply_filters( 'woocommerce_cart_shortcode_tag', 'woocommerce_cart' ) . ']'
-		// 	),
-		// 	'checkout' => array(
-		// 		'name'    => _x( 'checkout', 'Page slug', 'woocommerce' ),
-		// 		'title'   => _x( 'Checkout', 'Page title', 'woocommerce' ),
-		// 		'content' => '[' . apply_filters( 'woocommerce_checkout_shortcode_tag', 'woocommerce_checkout' ) . ']'
-		// 	),
-		// 	'myaccount' => array(
-		// 		'name'    => _x( 'my-account', 'Page slug', 'woocommerce' ),
-		// 		'title'   => _x( 'My Account', 'Page title', 'woocommerce' ),
-		// 		'content' => '[' . apply_filters( 'woocommerce_my_account_shortcode_tag', 'woocommerce_my_account' ) . ']'
-		// 	)
-		// ) );
+		$pages = apply_filters( 'timetrader_create_pages', array(
+			'shop' => array(
+				'name'    => _x( 'shop', 'Page slug', 'timetrader' ),
+				'title'   => _x( 'Shop', 'Page title', 'timetrader' ),
+				'content' => ''
+			),
+			'cart' => array(
+				'name'    => _x( 'cart', 'Page slug', 'timetrader' ),
+				'title'   => _x( 'Cart', 'Page title', 'timetrader' ),
+				'content' => '[' . apply_filters( 'timetrader_cart_shortcode_tag', 'timetrader_cart' ) . ']'
+			),
+			'checkout' => array(
+				'name'    => _x( 'checkout', 'Page slug', 'timetrader' ),
+				'title'   => _x( 'Checkout', 'Page title', 'timetrader' ),
+				'content' => '[' . apply_filters( 'timetrader_checkout_shortcode_tag', 'timetrader_checkout' ) . ']'
+			),
+			'myaccount' => array(
+				'name'    => _x( 'my-account', 'Page slug', 'timetrader' ),
+				'title'   => _x( 'My Account', 'Page title', 'timetrader' ),
+				'content' => '[' . apply_filters( 'timetrader_my_account_shortcode_tag', 'timetrader_my_account' ) . ']'
+			)
+		) );
 
-		// foreach ( $pages as $key => $page ) {
-		// 	wc_create_page( esc_sql( $page['name'] ), 'woocommerce_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? wc_get_page_id( $page['parent'] ) : '' );
-		// }
+		foreach ( $pages as $key => $page ) {
+			wc_create_page( esc_sql( $page['name'] ), 'timetrader_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? wc_get_page_id( $page['parent'] ) : '' );
+		}
 	}
+
 
 	/**
 	 * Default options
@@ -244,22 +245,22 @@ class TimetraderInstall {
 	 * Add the default terms for WC taxonomies - product types and order statuses. Modify this at your own risk.
 	 */
 	private static function create_terms() {
-		// $taxonomies = array(
-		// 	'product_type' => array(
-		// 		'simple',
-		// 		'grouped',
-		// 		'variable',
-		// 		'external'
-		// 	)
-		// );
+		$taxonomies = array(
+			'product_type' => array(
+				'simple',
+				'grouped',
+				'variable',
+				'external'
+			)
+		);
 
-		// foreach ( $taxonomies as $taxonomy => $terms ) {
-		// 	foreach ( $terms as $term ) {
-		// 		if ( ! get_term_by( 'slug', sanitize_title( $term ), $taxonomy ) ) {
-		// 			wp_insert_term( $term, $taxonomy );
-		// 		}
-		// 	}
-		// }
+		foreach ( $taxonomies as $taxonomy => $terms ) {
+			foreach ( $terms as $term ) {
+				if ( ! get_term_by( 'slug', sanitize_title( $term ), $taxonomy ) ) {
+					wp_insert_term( $term, $taxonomy );
+				}
+			}
+		}
 	}
 
 	/**
@@ -364,6 +365,8 @@ class TimetraderInstall {
 
 
 	}
+
+
 
 	/**
 	 * Create roles and capabilities
