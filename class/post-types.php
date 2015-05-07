@@ -22,16 +22,10 @@ class TimeTrader_PostTypes {
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'register_taxonomies' ), 5 );
 		add_action( 'init', array( __CLASS__, 'register_post_types' ), 5 );
-
-
-		
 		add_action( 'init', array( __CLASS__, 'register_post_status' ), 9 );
-		// add_action( 'init', array( __CLASS__, 'support_jetpack_omnisearch' ) );
 	}
 
-	/**
-	 * Register core taxonomies.
-	 */
+
 	public static function register_taxonomies() {
 
 
@@ -87,18 +81,8 @@ class TimeTrader_PostTypes {
 
 
 
-
-
-
-
-
-
-
-
-	/**
-	 * Register our custom post statuses, used for order status.
-	 */
 	public static function register_post_status() {
+
 
 		// register_post_status( 'wc-pending', array(
 		// 	'label'                     => _x( 'Pending payment', 'Order status', 'timetrader' ),
@@ -163,16 +147,11 @@ class TimeTrader_PostTypes {
 		// 	'label_count'               => _n_noop( 'Failed <span class="count">(%s)</span>', 'Failed <span class="count">(%s)</span>', 'timetrader' )
 		// ) );
 
+
 	}
 
-	// /**
-	//  * Add Product Support to Jetpack Omnisearch.
-	//  */
-	// public static function support_jetpack_omnisearch() {
-	// 	// if ( class_exists( 'Jetpack_Omnisearch_Posts' ) ) {
-	// 	// 	new Jetpack_Omnisearch_Posts( 'product' );
-	// 	// }
-	// }
+
 }
+
 
 TimeTrader_PostTypes::init();
