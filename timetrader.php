@@ -85,9 +85,6 @@ final class TimeTrader {
 
 	}
 
-	/**
-	 * Include required core files used in admin and on the frontend.
-	 */
 	public function includes() {
 
 		include_once( 'class/install.php' );
