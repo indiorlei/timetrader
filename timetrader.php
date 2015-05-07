@@ -33,11 +33,6 @@ final class TimeTrader {
 	}
 
 	public function __construct() {
-
-
-
-
-
 		$this->define_constants();
 		$this->includes();
 		$this->init_hooks();// GERANDO ERRO VERIFICAR
@@ -51,7 +46,7 @@ final class TimeTrader {
 		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TT_Shortcodes' not found in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
 		// Warning: call_user_func_array() expects parameter 1 to be a valid callback, class 'TT_Emails' not found in /home/agenciac/public_html/clientes/academiadodinheiro/wp-includes/plugin.php on line 496
 
-		// register_activation_hook( __FILE__, array( 'TimetraderInstall', 'install' ) );
+		register_activation_hook( __FILE__, array( 'TimetraderInstall', 'install' ) );
 		// add_action( 'after_setup_theme', array( $this, 'setup_environment' ) );
 		// add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 		// add_action( 'init', array( $this, 'init' ), 0 );

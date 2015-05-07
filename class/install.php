@@ -299,18 +299,48 @@ class TimetraderInstall {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		// data_hora
-
-		$sql = "CREATE TABLE {$wpdb->prefix}$table_name (
+		$sql = "CREATE TABLE {$wpdb->prefix}timetrader_reservation (
 					id mediumint(9) NOT NULL AUTO_INCREMENT,
-					timedate datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-					name tinytext NOT NULL,
-					text text NOT NULL,
-					url varchar(55) DEFAULT '' NOT NULL,
+					client_id mediumint(9) NOT NULL,
+					subject varchar(200),
+					description varchar(1000),
+					status_id mediumint(9) NOT NULL,
+					UNIQUE KEY id (id)
+				) $charset_collate;
+				CREATE TABLE {$wpdb->prefix}timetrader_status (
+					id mediumint(9) NOT NULL AUTO_INCREMENT,
+					description varchar(45),
+					UNIQUE KEY id (id)
+				) $charset_collate;
+				CREATE TABLE {$wpdb->prefix}timetrader_client (
+					id mediumint(9) NOT NULL AUTO_INCREMENT,
+					name varchar(45),
+					email varchar(45),
+					telephone varchar(45),
+					age int,
+					gender varchar(45),
+					relative varchar(45),
+					states varchar(45),
+					skype varchar(45),
+					UNIQUE KEY id (id)
+				) $charset_collate;
+				CREATE TABLE {$wpdb->prefix}timetrader_date_available (
+					id mediumint(9) NOT NULL AUTO_INCREMENT,
+					date_available DATE,
+					UNIQUE KEY id (id)
+				) $charset_collate;
+				CREATE TABLE {$wpdb->prefix}timetrader_time_available (
+					id mediumint(9) NOT NULL AUTO_INCREMENT,
+					time_available DATE,
+					UNIQUE KEY id (id)
+				) $charset_collate;
+				CREATE TABLE {$wpdb->prefix}timetrader_time_available (
+					id mediumint(9) NOT NULL AUTO_INCREMENT,
+					time_available_id mediumint(9) NOT NULL,
+					date_available_id mediumint(9) NOT NULL,
 					UNIQUE KEY id (id)
 				) $charset_collate;";
 
-		
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		dbDelta( $sql );
@@ -333,107 +363,6 @@ class TimetraderInstall {
 
 
 
-	}
-
-	/**
-	 * Get Table schema
-	 * @return string
-	 */
-	private static function get_schema() {
-// 		global $wpdb;
-
-// 		$collate = '';
-
-// 		if ( $wpdb->has_cap( 'collation' ) ) {
-// 			if ( ! empty( $wpdb->charset ) ) {
-// 				$collate .= "DEFAULT CHARACTER SET $wpdb->charset";
-// 			}
-// 			if ( ! empty( $wpdb->collate ) ) {
-// 				$collate .= " COLLATE $wpdb->collate";
-// 			}
-// 		}
-
-// 		return "
-// CREATE TABLE {$wpdb->prefix}woocommerce_attribute_taxonomies (
-//   attribute_id bigint(20) NOT NULL auto_increment,
-//   attribute_name varchar(200) NOT NULL,
-//   attribute_label longtext NULL,
-//   attribute_type varchar(200) NOT NULL,
-//   attribute_orderby varchar(200) NOT NULL,
-//   attribute_public int(1) NOT NULL DEFAULT 1,
-//   PRIMARY KEY  (attribute_id),
-//   KEY attribute_name (attribute_name)
-// ) $collate;
-// CREATE TABLE {$wpdb->prefix}woocommerce_termmeta (
-//   meta_id bigint(20) NOT NULL auto_increment,
-//   woocommerce_term_id bigint(20) NOT NULL,
-//   meta_key varchar(255) NULL,
-//   meta_value longtext NULL,
-//   PRIMARY KEY  (meta_id),
-//   KEY woocommerce_term_id (woocommerce_term_id),
-//   KEY meta_key (meta_key)
-// ) $collate;
-// CREATE TABLE {$wpdb->prefix}woocommerce_downloadable_product_permissions (
-//   permission_id bigint(20) NOT NULL auto_increment,
-//   download_id varchar(32) NOT NULL,
-//   product_id bigint(20) NOT NULL,
-//   order_id bigint(20) NOT NULL DEFAULT 0,
-//   order_key varchar(200) NOT NULL,
-//   user_email varchar(200) NOT NULL,
-//   user_id bigint(20) NULL,
-//   downloads_remaining varchar(9) NULL,
-//   access_granted datetime NOT NULL default '0000-00-00 00:00:00',
-//   access_expires datetime NULL default null,
-//   download_count bigint(20) NOT NULL DEFAULT 0,
-//   PRIMARY KEY  (permission_id),
-//   KEY download_order_key_product (product_id,order_id,order_key,download_id),
-//   KEY download_order_product (download_id,order_id,product_id)
-// ) $collate;
-// CREATE TABLE {$wpdb->prefix}woocommerce_order_items (
-//   order_item_id bigint(20) NOT NULL auto_increment,
-//   order_item_name longtext NOT NULL,
-//   order_item_type varchar(200) NOT NULL DEFAULT '',
-//   order_id bigint(20) NOT NULL,
-//   PRIMARY KEY  (order_item_id),
-//   KEY order_id (order_id)
-// ) $collate;
-// CREATE TABLE {$wpdb->prefix}woocommerce_order_itemmeta (
-//   meta_id bigint(20) NOT NULL auto_increment,
-//   order_item_id bigint(20) NOT NULL,
-//   meta_key varchar(255) NULL,
-//   meta_value longtext NULL,
-//   PRIMARY KEY  (meta_id),
-//   KEY order_item_id (order_item_id),
-//   KEY meta_key (meta_key)
-// ) $collate;
-// CREATE TABLE {$wpdb->prefix}woocommerce_tax_rates (
-//   tax_rate_id bigint(20) NOT NULL auto_increment,
-//   tax_rate_country varchar(200) NOT NULL DEFAULT '',
-//   tax_rate_state varchar(200) NOT NULL DEFAULT '',
-//   tax_rate varchar(200) NOT NULL DEFAULT '',
-//   tax_rate_name varchar(200) NOT NULL DEFAULT '',
-//   tax_rate_priority bigint(20) NOT NULL,
-//   tax_rate_compound int(1) NOT NULL DEFAULT 0,
-//   tax_rate_shipping int(1) NOT NULL DEFAULT 1,
-//   tax_rate_order bigint(20) NOT NULL,
-//   tax_rate_class varchar(200) NOT NULL DEFAULT '',
-//   PRIMARY KEY  (tax_rate_id),
-//   KEY tax_rate_country (tax_rate_country),
-//   KEY tax_rate_state (tax_rate_state),
-//   KEY tax_rate_class (tax_rate_class),
-//   KEY tax_rate_priority (tax_rate_priority)
-// ) $collate;
-// CREATE TABLE {$wpdb->prefix}woocommerce_tax_rate_locations (
-//   location_id bigint(20) NOT NULL auto_increment,
-//   location_code varchar(255) NOT NULL,
-//   tax_rate_id bigint(20) NOT NULL,
-//   location_type varchar(40) NOT NULL,
-//   PRIMARY KEY  (location_id),
-//   KEY tax_rate_id (tax_rate_id),
-//   KEY location_type (location_type),
-//   KEY location_type_code (location_type,location_code)
-// ) $collate;
-// 		";
 	}
 
 	/**
@@ -705,23 +634,17 @@ class TimetraderInstall {
 		// return (array) $links;
 	}
 
-	/**
-	 * Uninstall tables when MU blog is deleted.
-	 * @param  array $tables
-	 * @return array
-	 */
 	public static function wpmu_drop_tables( $tables ) {
-		// global $wpdb;
+		global $wpdb;
 
-		// $tables[] = $wpdb->prefix . "timetrader_attribute_taxonomies";
-		// $tables[] = $wpdb->prefix . "timetrader_downloadable_product_permissions";
-		// $tables[] = $wpdb->prefix . "timetrader_termmeta";
-		// $tables[] = $wpdb->prefix . "timetrader_tax_rates";
-		// $tables[] = $wpdb->prefix . "timetrader_tax_rate_locations";
-		// $tables[] = $wpdb->prefix . "timetrader_order_items";
-		// $tables[] = $wpdb->prefix . "timetrader_order_itemmeta";
+		$tables[] = $wpdb->prefix . "timetrader_reservation";
+		$tables[] = $wpdb->prefix . "timetrader_status";
+		$tables[] = $wpdb->prefix . "timetrader_client";
+		$tables[] = $wpdb->prefix . "timetrader_date_available";
+		$tables[] = $wpdb->prefix . "timetrader_time_available";
+		$tables[] = $wpdb->prefix . "timetrader_time_available";
 
-		// return $tables;
+		return $tables;
 	}
 }
 
