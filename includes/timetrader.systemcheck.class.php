@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Check for common issues with the server environment and WordPress install.
  */
-class MetaSliderSystemCheck {
+class TimeTraderSystemCheck {
 
     var $options = array();
 
@@ -15,13 +15,15 @@ class MetaSliderSystemCheck {
      * Constructor
      */
     public function __construct() {
-        $this->options = get_site_option( 'metaslider_systemcheck' );
+        $this->options = get_site_option( 'timetrader_systemcheck' );
     }
 
+
     /**
-     * Check the system
-     */
+    * Check the system
+    */
     public function check() {
+
         $this->dismissMessages();
         $this->checkWordPressVersion();
         $this->checkImageLibrary();
@@ -30,17 +32,18 @@ class MetaSliderSystemCheck {
         $this->updateSystemCheck();
     }
 
+
     /**
-     * Disable a message
-     */
+    * Disable a message
+    */
     private function dismissMessages() {
         if ( isset( $_REQUEST['dismissMessage'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
             $nonce = $_REQUEST['_wpnonce'];
             $key = $_REQUEST['dismissMessage'];
 
-            if ( wp_verify_nonce( $nonce, "metaslider-dismiss-{$key}" ) ) {
+            if ( wp_verify_nonce( $nonce, "timetrader-dismiss-{$key}" ) ) {
                 $this->options[$key] = false;
-                update_site_option( 'metaslider_systemcheck', $this->options );
+                update_site_option( 'timetrader_systemcheck', $this->options );
             }
         }
     }
@@ -49,7 +52,7 @@ class MetaSliderSystemCheck {
      * Update our stored messages
      */
     private function updateSystemCheck() {
-        update_site_option( 'metaslider_systemcheck', $this->options );
+        update_site_option( 'timetrader_systemcheck', $this->options );
     }
 
     /**
@@ -150,7 +153,7 @@ class MetaSliderSystemCheck {
      * Print a warning message to the screen
      */
     private function printMessage( $message, $key ) {
-        $nonce = wp_create_nonce( "metaslider-dismiss-{$key}" );
-        echo "<div id='message' class='updated'><p><b>Warning:</b> {$message}<br /><br /><a class='button' href='?page=metaslider&dismissMessage={$key}&_wpnonce={$nonce}'>Hide</a></p></div>";
+        $nonce = wp_create_nonce( "timetrader-dismiss-{$key}" );
+        echo "<div id='message' class='updated'><p><b>Warning:</b> {$message}<br /><br /><a class='button' href='?page=timetrader&dismissMessage={$key}&_wpnonce={$nonce}'>Hide</a></p></div>";
     }
 }

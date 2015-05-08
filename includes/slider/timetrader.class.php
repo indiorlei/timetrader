@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class handles all slider related functionality, including saving settings and outputting
  * the slider HTML (front end and back end)
  */
-class MetaSlider {
+class TimeTrader {
 
     public $id = 0; // slider ID
     public $identifier = 0; // unique identifier
@@ -23,7 +23,7 @@ class MetaSlider {
     public function __construct( $id, $shortcode_settings ) {
         $this->id = $id;
         $this->settings = array_merge( $shortcode_settings, $this->get_settings() );
-        $this->identifier = 'metaslider_' . $this->id;
+        $this->identifier = 'timetrader_' . $this->id;
         $this->populate_slides();
     }
 
@@ -120,7 +120,7 @@ class MetaSlider {
             'noConflict' => true
         );
 
-        $params = apply_filters( 'metaslider_default_parameters', $params );
+        $params = apply_filters( 'timetrader_default_parameters', $params );
 
         return $params;
     }
@@ -148,7 +148,7 @@ class MetaSlider {
             )
         );
 
-        $args = apply_filters( 'metaslider_populate_slides_args', $args, $this->id, $this->settings );
+        $args = apply_filters( 'timetrader_populate_slides_args', $args, $this->id, $this->settings );
 
         $query = new WP_Query( $args );
 
@@ -171,8 +171,8 @@ class MetaSlider {
             $type = get_post_meta( $query->post->ID, 'ml-slider_type', true );
             $type = $type ? $type : 'image'; // backwards compatibility, fall back to 'image'
 
-            if ( has_filter( "metaslider_get_{$type}_slide" ) ) {
-                $return = apply_filters( "metaslider_get_{$type}_slide", $query->post->ID, $this->id );
+            if ( has_filter( "timetrader_get_{$type}_slide" ) ) {
+                $return = apply_filters( "timetrader_get_{$type}_slide", $query->post->ID, $this->id );
 
                 if ( is_array( $return ) ) {
                     $slides = array_merge( $slides, $return );
@@ -222,7 +222,7 @@ class MetaSlider {
 
         $slideshow = implode( "\n", $html );
 
-        $slideshow = apply_filters( 'metaslider_slideshow_output', $slideshow, $this->id, $this->settings );
+        $slideshow = apply_filters( 'timetrader_slideshow_output', $slideshow, $this->id, $this->settings );
 
         return $slideshow;
     }
@@ -231,9 +231,9 @@ class MetaSlider {
      * Return the ID to use for the container
      */
     private function get_container_id() {
-        $container_id = 'metaslider_container_' . $this->id;
+        $container_id = 'timetrader_container_' . $this->id;
 
-        $id = apply_filters( 'metaslider_container_id', $container_id, $this->id, $this->settings );
+        $id = apply_filters( 'timetrader_container_id', $container_id, $this->id, $this->settings );
 
         return $id;
     }
@@ -242,7 +242,7 @@ class MetaSlider {
      * Return the classes to use for the slidehsow container
      */
     private function get_container_class() {
-        $class = "metaslider metaslider-{$this->get_setting( 'type' )} metaslider-{$this->id} ml-slider";
+        $class = "timetrader timetrader-{$this->get_setting( 'type' )} timetrader-{$this->id} ml-slider";
 
         // apply the css class setting
         if ( $this->get_setting( 'cssClass' ) != 'false' ) {
@@ -250,7 +250,7 @@ class MetaSlider {
         }
 
         // handle any custom classes
-        $class = apply_filters( 'metaslider_css_classes', $class, $this->id, $this->settings );
+        $class = apply_filters( 'timetrader_css_classes', $class, $this->id, $this->settings );
 
         return $class;
     }
@@ -278,7 +278,7 @@ class MetaSlider {
         }
 
         // handle any custom container styles
-        $style = apply_filters( 'metaslider_container_style', $style, $this->id, $this->settings );
+        $style = apply_filters( 'timetrader_container_style', $style, $this->id, $this->settings );
 
         return $style;
     }
@@ -321,7 +321,7 @@ class MetaSlider {
     private function get_html_after() {
         $type = $this->get_setting( 'type' );
 
-        $html = apply_filters( "metaslider_{$type}_slider_html_after", "", $this->id, $this->settings );
+        $html = apply_filters( "timetrader_{$type}_slider_html_after", "", $this->id, $this->settings );
 
         if ( strlen( $html ) ) {
             return "        {$html}";
@@ -339,10 +339,10 @@ class MetaSlider {
         $javascript = "";
 
         if ( $this->get_setting( 'noConflict' ) == 'true' && $type == 'flex' ) {
-            $javascript = "$('#metaslider_{$this->id}').addClass('flexslider'); // theme/plugin conflict avoidance";
+            $javascript = "$('#timetrader_{$this->id}').addClass('flexslider'); // theme/plugin conflict avoidance";
         }
 
-        $custom_js = apply_filters( "metaslider_{$type}_slider_javascript_before", $javascript, $this->id );
+        $custom_js = apply_filters( "timetrader_{$type}_slider_javascript_before", $javascript, $this->id );
 
         if ( strlen( $custom_js ) ) {
             return "\n            {$custom_js}";
@@ -357,7 +357,7 @@ class MetaSlider {
     private function get_custom_javascript_after() {
         $type = $this->get_setting( 'type' );
 
-        $custom_js = apply_filters( "metaslider_{$type}_slider_javascript", "", $this->id );
+        $custom_js = apply_filters( "timetrader_{$type}_slider_javascript", "", $this->id );
 
         if ( strlen( $custom_js ) ) {
             return "            {$custom_js}";
@@ -389,7 +389,7 @@ class MetaSlider {
 
         // deal with any customised parameters
         $type = $this->get_setting( 'type' );
-        $options = apply_filters( "metaslider_{$type}_slider_parameters", $options, $this->id, $this->settings );
+        $options = apply_filters( "timetrader_{$type}_slider_parameters", $options, $this->id, $this->settings );
         $arg = $type == 'flex' ? 'slider' : '';
 
         // create key:value strings
@@ -412,13 +412,13 @@ class MetaSlider {
      * @return string
      */
     private function get_inline_css() {
-        $css = apply_filters( "metaslider_css", "", $this->settings, $this->id );
+        $css = apply_filters( "timetrader_css", "", $this->settings, $this->id );
 
         // use this to add the scoped attribute for HTML5 validation (if needed)
-        $attributes = apply_filters( "metaslider_style_attributes", "", $this->settings, $this->id );
+        $attributes = apply_filters( "timetrader_style_attributes", "", $this->settings, $this->id );
 
         if ( strlen( $css ) ) {
-            return "<style type=\"text/css\"{$attributes} id=\"metaslider-css-{$this->id}\">{$css}\n    </style>";
+            return "<style type=\"text/css\"{$attributes} id=\"timetrader-css-{$this->id}\">{$css}\n    </style>";
         }
 
         return "";
@@ -429,17 +429,17 @@ class MetaSlider {
      */
     public function enqueue_scripts() {
         if ( $this->get_setting( 'printJs' ) == 'true' ) {
-            wp_enqueue_script( 'metaslider-' . $this->get_setting( 'type' ) . '-slider', METASLIDER_ASSETS_URL . $this->js_path, array( 'jquery' ), METASLIDER_VERSION );
+            wp_enqueue_script( 'timetrader-' . $this->get_setting( 'type' ) . '-slider', timetrader_ASSETS_URL . $this->js_path, array( 'jquery' ), timetrader_VERSION );
         }
 
         if ( $this->get_setting( 'printCss' ) == 'true' ) {
             // this will be added to the bottom of the page as <head> has already been processed by WordPress.
             // For HTML5 compatibility, use a minification plugin to move the CSS to the <head>
-            wp_enqueue_style( 'metaslider-' . $this->get_setting( 'type' ) . '-slider', METASLIDER_ASSETS_URL . $this->css_path, false, METASLIDER_VERSION );
-            wp_enqueue_style( 'metaslider-public', METASLIDER_ASSETS_URL . 'metaslider/public.css', false, METASLIDER_VERSION );
+            wp_enqueue_style( 'timetrader-' . $this->get_setting( 'type' ) . '-slider', timetrader_ASSETS_URL . $this->css_path, false, timetrader_VERSION );
+            wp_enqueue_style( 'timetrader-public', timetrader_ASSETS_URL . 'timetrader/public.css', false, timetrader_VERSION );
         }
 
-        do_action( 'metaslider_register_public_styles' );
+        do_action( 'timetrader_register_public_styles' );
     }
 
 
