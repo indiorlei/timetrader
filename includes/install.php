@@ -19,9 +19,9 @@ class TimetraderInstall {
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
 
 		// add_action( 'in_plugin_update_message-woocommerce/woocommerce.php', array( __CLASS__, 'in_plugin_update_message' ) );
-		add_filter( 'plugin_action_links_' . TT_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
+		// add_filter( 'plugin_action_links_' . TT_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 		// add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 ); // ERROR ON PAGE PLUGINS
-		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
+		// add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 	}
 
 	public static function check_version() {
@@ -187,32 +187,32 @@ class TimetraderInstall {
 	public static function create_pages() {
 		// include_once( 'admin/wc-admin-functions.php' );
 
-		$pages = apply_filters( 'timetrader_create_pages', array(
-			'shop' => array(
-				'name'    => _x( 'shop', 'Page slug', 'timetrader' ),
-				'title'   => _x( 'Shop', 'Page title', 'timetrader' ),
-				'content' => ''
-			),
-			'cart' => array(
-				'name'    => _x( 'cart', 'Page slug', 'timetrader' ),
-				'title'   => _x( 'Cart', 'Page title', 'timetrader' ),
-				'content' => '[' . apply_filters( 'timetrader_cart_shortcode_tag', 'timetrader_cart' ) . ']'
-			),
-			'checkout' => array(
-				'name'    => _x( 'checkout', 'Page slug', 'timetrader' ),
-				'title'   => _x( 'Checkout', 'Page title', 'timetrader' ),
-				'content' => '[' . apply_filters( 'timetrader_checkout_shortcode_tag', 'timetrader_checkout' ) . ']'
-			),
-			'myaccount' => array(
-				'name'    => _x( 'my-account', 'Page slug', 'timetrader' ),
-				'title'   => _x( 'My Account', 'Page title', 'timetrader' ),
-				'content' => '[' . apply_filters( 'timetrader_my_account_shortcode_tag', 'timetrader_my_account' ) . ']'
-			)
-		) );
+		// $pages = apply_filters( 'timetrader_create_pages', array(
+		// 	'shop' => array(
+		// 		'name'    => _x( 'shop', 'Page slug', 'timetrader' ),
+		// 		'title'   => _x( 'Shop', 'Page title', 'timetrader' ),
+		// 		'content' => ''
+		// 	),
+		// 	'cart' => array(
+		// 		'name'    => _x( 'cart', 'Page slug', 'timetrader' ),
+		// 		'title'   => _x( 'Cart', 'Page title', 'timetrader' ),
+		// 		'content' => '[' . apply_filters( 'timetrader_cart_shortcode_tag', 'timetrader_cart' ) . ']'
+		// 	),
+		// 	'checkout' => array(
+		// 		'name'    => _x( 'checkout', 'Page slug', 'timetrader' ),
+		// 		'title'   => _x( 'Checkout', 'Page title', 'timetrader' ),
+		// 		'content' => '[' . apply_filters( 'timetrader_checkout_shortcode_tag', 'timetrader_checkout' ) . ']'
+		// 	),
+		// 	'myaccount' => array(
+		// 		'name'    => _x( 'my-account', 'Page slug', 'timetrader' ),
+		// 		'title'   => _x( 'My Account', 'Page title', 'timetrader' ),
+		// 		'content' => '[' . apply_filters( 'timetrader_my_account_shortcode_tag', 'timetrader_my_account' ) . ']'
+		// 	)
+		// ) );
 
-		foreach ( $pages as $key => $page ) {
-			wc_create_page( esc_sql( $page['name'] ), 'timetrader_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? wc_get_page_id( $page['parent'] ) : '' );
-		}
+		// foreach ( $pages as $key => $page ) {
+		// 	wc_create_page( esc_sql( $page['name'] ), 'timetrader_' . $key . '_page_id', $page['title'], $page['content'], ! empty( $page['parent'] ) ? wc_get_page_id( $page['parent'] ) : '' );
+		// }
 	}
 
 

@@ -44,6 +44,8 @@ final class TimeTrader {
 
 	private function init_hooks() {
 		register_activation_hook( __FILE__, array( 'TimetraderInstall', 'install' ) );
+		// register_deactivation_hook( $file, $function ); register to uninstall plugin
+
 		// add_action( 'after_setup_theme', array( $this, 'setup_environment' ) );
 		add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 		add_action( 'init', array( $this, 'init' ), 0 );
@@ -87,8 +89,8 @@ final class TimeTrader {
 
 	public function includes() {
 
-		include_once( 'class/install.php' );
-		include_once( 'class/post-types.php' ); // Registers post types
+		include_once( 'includes/install.php' );
+		include_once( 'includes/post-types.php' ); // Registers post types
 
 		// include_once( 'includes/class-wc-autoloader.php' );
 		// include_once( 'includes/wc-core-functions.php' );
@@ -163,7 +165,7 @@ final class TimeTrader {
 	 * Function used to Init timetrader Template Functions - This makes them pluggable by plugins and themes.
 	 */
 	public function include_template_functions() {
-		include_once( 'class/template-functions.php' );
+		// include_once( 'includes/template-functions.php' );
 	}
 
 	/**
