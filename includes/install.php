@@ -17,18 +17,21 @@ class TimetraderInstall {
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'check_version' ), 5 );
 		add_action( 'admin_init', array( __CLASS__, 'install_actions' ) );
+
 		// add_action( 'in_plugin_update_message-woocommerce/woocommerce.php', array( __CLASS__, 'in_plugin_update_message' ) );
-		// add_filter( 'plugin_action_links_' . WC_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
-		// add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
-		// add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
+		add_filter( 'plugin_action_links_' . TT_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
+		// add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 ); // ERROR ON PAGE PLUGINS
+		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 	}
 
 	public static function check_version() {
-	
+
+
 		// if ( ! defined( 'IFRAME_REQUEST' ) && ( get_option( 'timetrader_version' ) != TT()->version || get_option( 'timetrader_db_version' ) != TT()->version ) ) {
 			self::install();
 			do_action( 'timetrader_updated' );
 		// }
+
 
 	}
 
@@ -93,7 +96,7 @@ class TimetraderInstall {
 
 		self::create_terms();
 		// self::create_cron_jobs();
-		// self::create_files();
+		self::create_files();
 
 		// // Queue upgrades
 		// $current_db_version = get_option( 'woocommerce_db_version', null );
@@ -263,38 +266,8 @@ class TimetraderInstall {
 		}
 	}
 
-	/**
-	 * Set up the database tables which the plugin needs to function.
-	 *
-	 * Tables:
-	 *		woocommerce_attribute_taxonomies - Table for storing attribute taxonomies - these are user defined
-	 *		woocommerce_termmeta - Term meta table - sadly WordPress does not have termmeta so we need our own
-	 *		woocommerce_downloadable_product_permissions - Table for storing user and guest download permissions.
-	 *			KEY(order_id, product_id, download_id) used for organizing downloads on the My Account page
-	 *		woocommerce_order_items - Order line items are stored in a table to make them easily queryable for reports
-	 *		woocommerce_order_itemmeta - Order line item meta is stored in a table for storing extra data.
-	 *		woocommerce_tax_rates - Tax Rates are stored inside 2 tables making tax queries simple and efficient.
-	 *		woocommerce_tax_rate_locations - Each rate can be applied to more than one postcode/city hence the second table.
-	 *
-	 * @return void
-	 */
+
 	private static function create_tables() {
-		// global $wpdb;
-		// $wpdb->hide_errors();
-		// require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		// /**
-		//  * Before updating with DBDELTA, remove any primary keys which could be modified due to schema updates
-		//  */
-		// if ( $wpdb->get_var( "SHOW TABLES LIKE '{$wpdb->prefix}woocommerce_downloadable_product_permissions';" ) ) {
-		// 	if ( ! $wpdb->get_var( "SHOW COLUMNS FROM `{$wpdb->prefix}woocommerce_downloadable_product_permissions` LIKE 'permission_id';" ) ) {
-		// 		$wpdb->query( "ALTER TABLE {$wpdb->prefix}woocommerce_downloadable_product_permissions DROP PRIMARY KEY, ADD `permission_id` bigint(20) NOT NULL PRIMARY KEY AUTO_INCREMENT;" );
-		// 	}
-		// }
-		// dbDelta( self::get_schema() );
-
-
-
-
 
 		global $wpdb;
 
@@ -346,48 +319,33 @@ class TimetraderInstall {
 
 		dbDelta( $sql );
 
-
-		// $welcome_name = 'Mr. WordPress';
-		// $welcome_text = 'Congratulations, you just completed the installation!';
-
-		// $table_name = $wpdb->prefix . 'INDIORLEIDEOLIVEIRA';
-
-		// $wpdb->insert( 
-		// 	$table_name,
-		// 	array(
-		// 		'time' => current_time( 'mysql' ),
-		// 		'name' => $welcome_name,
-		// 		'text' => $welcome_text,
-		// 		)
-		// 	);
-
-
-
+		// $wpdb->insert( $table_name, array(
+		// 	'time' => current_time( 'mysql' ),
+		// 	'name' => $welcome_name,
+		// 	'text' => $welcome_text,
+		// 	)
+		// );
 
 	}
 
-
-
-	/**
-	 * Create roles and capabilities
-	 */
 	public static function create_roles() {
-		// global $wp_roles;
+		global $wp_roles;
 
-		// if ( ! class_exists( 'WP_Roles' ) ) {
-		// 	return;
-		// }
+		if ( ! class_exists( 'WP_Roles' ) ) {
+			return;
+		}
 
-		// if ( ! isset( $wp_roles ) ) {
-		// 	$wp_roles = new WP_Roles();
-		// }
+		if ( ! isset( $wp_roles ) ) {
+			$wp_roles = new WP_Roles();
+		}
 
-		// // Customer role
-		// add_role( 'customer', __( 'Customer', 'woocommerce' ), array(
-		// 	'read' 						=> true,
-		// 	'edit_posts' 				=> false,
-		// 	'delete_posts' 				=> false
-		// ) );
+		// Customer role
+		add_role( 'customer', __( 'Customer', 'timetrader' ), array(
+			'read'			=> true,
+			'edit_posts'	=> false,
+			'delete_posts'	=> false
+			)
+		);
 
 		// // Shop manager role
 		// add_role( 'shop_manager', __( 'Shop Manager', 'woocommerce' ), array(
@@ -443,12 +401,8 @@ class TimetraderInstall {
 		// }
 	}
 
-	/**
-	 * Get capabilities for WooCommerce - these are assigned to admin/shop manager during installation or reset
-	 *
-	 * @return array
-	 */
-	 private static function get_core_capabilities() {
+
+	private static function get_core_capabilities() {
 		// $capabilities = array();
 
 		// $capabilities['core'] = array(
@@ -487,9 +441,10 @@ class TimetraderInstall {
 		// return $capabilities;
 	}
 
+
 	/**
-	 * woocommerce_remove_roles function.
-	 */
+	* timetrader_remove_roles function.
+	*/
 	public static function remove_roles() {
 		global $wp_roles;
 
@@ -514,45 +469,47 @@ class TimetraderInstall {
 		remove_role( 'shop_manager' );
 	}
 
-	/**
-	 * Create files/directories
-	 */
+
 	private static function create_files() {
-		// // Install files and folders for uploading files and prevent hotlinking
-		// $upload_dir =  wp_upload_dir();
+		// Install files and folders for uploading files and prevent hotlinking
+		$upload_dir =  wp_upload_dir();
 
-		// $files = array(
-		// 	array(
-		// 		'base' 		=> $upload_dir['basedir'] . '/woocommerce_uploads',
-		// 		'file' 		=> '.htaccess',
-		// 		'content' 	=> 'deny from all'
-		// 	),
-		// 	array(
-		// 		'base' 		=> $upload_dir['basedir'] . '/woocommerce_uploads',
-		// 		'file' 		=> 'index.html',
-		// 		'content' 	=> ''
-		// 	),
-		// 	array(
-		// 		'base' 		=> WC_LOG_DIR,
-		// 		'file' 		=> '.htaccess',
-		// 		'content' 	=> 'deny from all'
-		// 	),
-		// 	array(
-		// 		'base' 		=> WC_LOG_DIR,
-		// 		'file' 		=> 'index.html',
-		// 		'content' 	=> ''
-		// 	)
-		// );
+		$files = array(
+			array(
+				'base' 		=> $upload_dir['basedir'] . '/timetrader_uploads',
+				'file' 		=> '.htaccess',
+				'content' 	=> 'deny from all'
+			),
+			array(
+				'base' 		=> $upload_dir['basedir'] . '/timetrader_uploads',
+				'file' 		=> 'index.html',
+				'content' 	=> ''
+			),
+			array(
+				'base' 		=> TT_LOG_DIR,
+				'file' 		=> '.htaccess',
+				'content' 	=> 'deny from all'
+			),
+			array(
+				'base' 		=> TT_LOG_DIR,
+				'file' 		=> 'index.html',
+				'content' 	=> ''
+			)
+		);
 
-		// foreach ( $files as $file ) {
-		// 	if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
-		// 		if ( $file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'w' ) ) {
-		// 			fwrite( $file_handle, $file['content'] );
-		// 			fclose( $file_handle );
-		// 		}
-		// 	}
-		// }
+		foreach ( $files as $file ) {
+			if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
+				if ( $file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'w' ) ) {
+					fwrite( $file_handle, $file['content'] );
+					fclose( $file_handle );
+				}
+			}
+		}
 	}
+
+
+
+
 
 	/**
 	 * Show plugin changes. Code adapted from W3 Total Cache.
