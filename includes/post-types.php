@@ -20,9 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TimeTrader_PostTypes {
 
 	public static function init() {
-		add_action( 'init', array( __CLASS__, 'register_taxonomies' ), 5 );
+
+		add_action( 'init', array( __CLASS__, 'register_taxonomies' ), 4 );
 		add_action( 'init', array( __CLASS__, 'register_post_types' ), 5 );
 		add_action( 'init', array( __CLASS__, 'register_post_status' ), 9 );
+
 	}
 
 
@@ -70,7 +72,7 @@ class TimeTrader_PostTypes {
 			'capability_type' => 'post',
 			'map_meta_cap' => true,
 			'menu_position' => 15,
-			'supports' => array( 'title', 'editor', 'comments', 'thumbnail', 'custom-fields' ),
+			'supports' => array( 'title' ),
 			'taxonomies' => array( 'timetrader-categories' ),
 			'has_archive' => true
 			)

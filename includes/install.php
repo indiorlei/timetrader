@@ -24,6 +24,7 @@ class TimetraderInstall {
 		// add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 	}
 
+
 	public static function check_version() {
 
 
@@ -66,6 +67,7 @@ class TimetraderInstall {
 			// 	wp_redirect( admin_url( 'index.php?page=wc-about&wc-updated=true' ) );
 			// 	exit;
 			// }
+
 		}
 	
 	}
@@ -128,11 +130,12 @@ class TimetraderInstall {
 
 		// // Trigger action
 		// do_action( 'woocommerce_installed' );
+
 	}
 
 	/**
-	 * Handle updates
-	 */
+	* Handle updates
+	*/
 	private static function update() {
 		// $current_db_version = get_option( 'woocommerce_db_version' );
 		// $db_updates = array(
@@ -446,6 +449,7 @@ class TimetraderInstall {
 	* timetrader_remove_roles function.
 	*/
 	public static function remove_roles() {
+
 		global $wp_roles;
 
 		if ( ! class_exists( 'WP_Roles' ) ) {
@@ -467,6 +471,7 @@ class TimetraderInstall {
 
 		remove_role( 'customer' );
 		remove_role( 'shop_manager' );
+
 	}
 
 
