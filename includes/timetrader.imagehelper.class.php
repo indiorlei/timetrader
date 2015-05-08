@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Helper class for resizing images, returning the correct URL to the image etc
  */
-class MetaSliderImageHelper {
+class TimeTraderImageHelper {
 
     private $crop_type = 'smart';
     private $container_width; // slideshow width
@@ -202,7 +202,7 @@ class MetaSliderImageHelper {
     function get_image_url( $force_resize = false ) {
         // Get the image file path
         if ( ! strlen( $this->path ) ) {
-            return apply_filters( 'metaslider_resized_image_url', $this->url, $this->url );
+            return apply_filters( 'timetrader_resized_image_url', $this->url, $this->url );
         }
 
         // get the full image size dimensions
@@ -210,7 +210,7 @@ class MetaSliderImageHelper {
 
         // bail out if we can't find the image dimensions, return the full URL
         if ( $orig_size == false ) {
-            return apply_filters( 'metaslider_resized_image_url', $this->url, $this->url );
+            return apply_filters( 'timetrader_resized_image_url', $this->url, $this->url );
         }
 
         // get our crop dimensions (this is the size we want to display)
@@ -218,7 +218,7 @@ class MetaSliderImageHelper {
 
         // if the full size is the same as the required size, return the full URL
         if ( $orig_size['width'] == $dest_size['width'] && $orig_size['height'] == $dest_size['height'] ) {
-            return apply_filters( 'metaslider_resized_image_url', $this->url, $this->url );
+            return apply_filters( 'timetrader_resized_image_url', $this->url, $this->url );
         }
 
         // construct the file name
@@ -237,7 +237,7 @@ class MetaSliderImageHelper {
             $dest_url = $this->url;
         }
 
-        $dest_url = apply_filters( 'metaslider_resized_image_url', $dest_url, $this->url );
+        $dest_url = apply_filters( 'timetrader_resized_image_url', $dest_url, $this->url );
 
         return $dest_url;
     }
@@ -304,7 +304,7 @@ class MetaSliderImageHelper {
         // editor will return an error if the path is invalid
         if ( is_wp_error( $image ) ) {
 
-            $capability = apply_filters( 'metaslider_capability', 'edit_others_posts' );
+            $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
 
             if ( is_admin() && current_user_can( $capability ) ) {
                 echo '<div id="message" class="error">';
