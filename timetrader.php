@@ -27,7 +27,9 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function __construct() {
             $this->define_constants();
             $this->includes();
-            $this->setup_actions();
+            
+            $this->setup_actions(); //verificar oque faz?
+
             $this->setup_filters();
             $this->setup_shortcode();
             $this->register_slide_types();
@@ -101,7 +103,8 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         */
         private function setup_actions() {
 
-            add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9553 );
+            add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9553 ); //prioridade exlui plugin ml-slider
+
             add_action( 'init', array( $this, 'register_post_type' ) );
             add_action( 'init', array( $this, 'register_taxonomy' ) );
             add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -190,16 +193,13 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * Add the menu page
         */
         public function register_admin_menu() {
-            
+
             global $user_ID;
             
             $title = apply_filters( 'timetrader_menu_title', 'Time Trader' );
             $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-            
-            $page = add_menu_page( $title, $title, $capability, 'timetrader', array(
-                $this, 'render_admin_page'
-                ), TIMETRADER_ASSETS_URL . 'timetrader/matchalabs.png', 9501 );
 
+            $page = add_menu_page( $title, $title, $capability, 'timetrader', array( $this, 'render_admin_page' ), TIMETRADER_ASSETS_URL . 'timetrader/logo.png' );
 
             // ensure our JavaScript is only loaded on the Time Trader admin page
             add_action( 'admin_print_scripts-' . $page, array( $this, 'register_admin_scripts' ) );
@@ -1495,7 +1495,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 $context .= '<a href="#TB_inline?&inlineId=choose-meta-slider" class="thickbox button" title="' .
                 __( "Select slideshow to insert into post", "timetrader" ) .
                 '"><span class="wp-media-buttons-icon" style="background: url(' . TIMETRADER_ASSETS_URL .
-                    '/timetrader/matchalabs.png); background-repeat: no-repeat; background-position: left bottom;"></span> ' .
+                    '/timetrader/logo.png); background-repeat: no-repeat; background-position: left bottom;"></span> ' .
         __( "Add slider", "timetrader" ) . '</a>';
         }
         return $context;
