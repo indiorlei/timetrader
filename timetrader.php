@@ -27,9 +27,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function __construct() {
             $this->define_constants();
             $this->includes();
-            
-            $this->setup_actions(); //verificar oque faz?
-
+            $this->setup_actions();
             $this->setup_filters();
             $this->setup_shortcode();
             $this->register_slide_types();
@@ -103,7 +101,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         */
         private function setup_actions() {
 
-            add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9553 ); //prioridade exlui plugin ml-slider
+            add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9553 );
 
             add_action( 'init', array( $this, 'register_post_type' ) );
             add_action( 'init', array( $this, 'register_taxonomy' ) );
@@ -207,15 +205,15 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             add_action( 'load-' . $page, array( $this, 'help_tab' ) );
             
             // if ( ! is_plugin_active( 'timetrader-pro/timetrader-pro.php' ) && get_user_meta( $user_ID, "timetrader_hide_go_pro", true ) !== 'true' ) {
-            //     $page = add_submenu_page(
-            //         'timetrader',
-            //         __( 'Go Pro!', 'timetrader' ),
-            //         __( 'Go Pro!', 'timetrader' ),
-            //         $capability,
-            //         'timetrader-go-pro',
-            //         array( $this, 'go_pro_page' )
-            //         );
-            //     add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
+            // $page = add_submenu_page(
+            // 'timetrader',
+            // __( 'Go Pro!', 'timetrader' ),
+            // __( 'Go Pro!', 'timetrader' ),
+            // $capability,
+            // 'timetrader-go-pro',
+            // array( $this, 'go_pro_page' )
+            // );
+            // add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
             // }
         }
 
