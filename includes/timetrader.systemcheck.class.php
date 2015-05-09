@@ -4,26 +4,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // disable direct access
 }
 
-/**
- * Check for common issues with the server environment and WordPress install.
- */
 class TimeTraderSystemCheck {
 
     var $options = array();
 
-    /**
-     * Constructor
-     */
     public function __construct() {
         $this->options = get_site_option( 'timetrader_systemcheck' );
     }
 
-
-    /**
-    * Check the system
-    */
     public function check() {
-
         $this->dismissMessages();
         $this->checkWordPressVersion();
         $this->checkImageLibrary();
@@ -32,10 +21,6 @@ class TimeTraderSystemCheck {
         $this->updateSystemCheck();
     }
 
-
-    /**
-    * Disable a message
-    */
     private function dismissMessages() {
         if ( isset( $_REQUEST['dismissMessage'] ) && isset( $_REQUEST['_wpnonce'] ) ) {
             $nonce = $_REQUEST['_wpnonce'];
