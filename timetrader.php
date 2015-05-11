@@ -14,11 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // disable direct access
 }
 if ( ! class_exists( 'TimeTraderPlugin' ) ) :
+
     class TimeTraderPlugin {
         public $version = '0.1';
-
         public $slider = null;
-        
 
         public static function init() {
             $timetrader = new self();
@@ -49,9 +48,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         }
 
         private function includes() {
-
             $autoload_is_disabled = defined( 'TIMETRADER_AUTOLOAD_CLASSES' ) && TIMETRADER_AUTOLOAD_CLASSES === false;
-            
             if ( function_exists( "spl_autoload_register" ) && ! ( $autoload_is_disabled ) ) {
                 // >= PHP 5.2 - Use auto loading
                 if ( function_exists( "__autoload" ) ) {
@@ -66,7 +63,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     }
                 }
             }
-
         }
 
         /**
@@ -430,56 +426,46 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         *
         */
         public function update_slider() {
-
             // check_admin_referer( "timetrader_update_slider" );
             // $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-
             // if ( ! current_user_can( $capability ) ) {
-            //     return;
+            // return;
             // }
             // $slider_id = absint( $_POST['slider_id'] );
-
             // if ( ! $slider_id ) {
-            //     return;
+            // return;
             // }
-
             // // update settings
             // if ( isset( $_POST['settings'] ) ) {
-            //     $new_settings = $_POST['settings'];
-            //     $old_settings = get_post_meta( $slider_id, 'timetrader_settings', true );
-            //     // convert submitted checkbox values from 'on' or 'off' to boolean values
-            //     $checkboxes = apply_filters( "timetrader_checkbox_settings", array( 'noConflict', 'fullWidth', 'hoverPause', 'links', 'reverse', 'random', 'printCss', 'printJs', 'smoothHeight', 'center', 'carouselMode', 'autoPlay' ) );
-
-            //     foreach ( $checkboxes as $checkbox ) {
-            //         if ( isset( $new_settings[$checkbox] ) && $new_settings[$checkbox] == 'on' ) {
-            //             $new_settings[$checkbox] = "true";
-            //         } else {
-            //             $new_settings[$checkbox] = "false";
-            //         }
-            //     }
-
-            //     $settings = array_merge( (array)$old_settings, $new_settings );
-
-            //     // update the slider settings
-            //     update_post_meta( $slider_id, 'timetrader_settings', $settings );
+            // $new_settings = $_POST['settings'];
+            // $old_settings = get_post_meta( $slider_id, 'timetrader_settings', true );
+            // // convert submitted checkbox values from 'on' or 'off' to boolean values
+            // $checkboxes = apply_filters( "timetrader_checkbox_settings", array( 'noConflict', 'fullWidth', 'hoverPause', 'links', 'reverse', 'random', 'printCss', 'printJs', 'smoothHeight', 'center', 'carouselMode', 'autoPlay' ) );
+            // foreach ( $checkboxes as $checkbox ) {
+            // if ( isset( $new_settings[$checkbox] ) && $new_settings[$checkbox] == 'on' ) {
+            // $new_settings[$checkbox] = "true";
+            // } else {
+            // $new_settings[$checkbox] = "false";
             // }
-
+            // }
+            // $settings = array_merge( (array)$old_settings, $new_settings );
+            // // update the slider settings
+            // update_post_meta( $slider_id, 'timetrader_settings', $settings );
+            // }
             // // update slideshow title
             // if ( isset( $_POST['title'] ) ) {
-            //     $slide = array(
-            //         'ID' => $slider_id,
-            //         'post_title' => esc_html( $_POST['title'] )
-            //         );
-            //     wp_update_post( $slide );
+            // $slide = array(
+            // 'ID' => $slider_id,
+            // 'post_title' => esc_html( $_POST['title'] )
+            // );
+            // wp_update_post( $slide );
             // }
-
             // // update individual slides
             // if ( isset( $_POST['attachment'] ) ) {
-            //     foreach ( $_POST['attachment'] as $slide_id => $fields ) {
-            //         do_action( "timetrader_save_{$fields['type']}_slide", $slide_id, $slider_id, $fields );
-            //     }
+            // foreach ( $_POST['attachment'] as $slide_id => $fields ) {
+            // do_action( "timetrader_save_{$fields['type']}_slide", $slide_id, $slider_id, $fields );
             // }
-
+            // }
         }
 
 
@@ -488,7 +474,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * it from the slide taxonomy.
         */
         public function delete_slide() {
-
             // // check nonce
             // check_admin_referer( "timetrader_delete_slide" );
             // $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
@@ -799,20 +784,20 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         */
         private function get_easing_options() {
             $options = array(
-            'linear', 'swing', 'jswing', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad',
-            'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart',
-            'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint',
-            'easeInOutQuint', 'easeInSine', 'easeOutSine', 'easeInOutSine',
-            'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc',
-            'easeInOutCirc', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic',
-            'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInBounce', 'easeOutBounce',
-            'easeInOutBounce'
-            );
+                'linear', 'swing', 'jswing', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad',
+                'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart',
+                'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint',
+                'easeInOutQuint', 'easeInSine', 'easeOutSine', 'easeInOutSine',
+                'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc',
+                'easeInOutCirc', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic',
+                'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInBounce', 'easeOutBounce',
+                'easeInOutBounce'
+                );
             foreach ( $options as $option ) {
-            $return[$option] = array(
-            'label' => ucfirst( preg_replace( '/(\w+)([A-Z])/U', '\\1 \\2', $option ) ),
-            'class' => ''
-            );
+                $return[$option] = array(
+                    'label' => ucfirst( preg_replace( '/(\w+)([A-Z])/U', '\\1 \\2', $option ) ),
+                    'class' => ''
+                    );
             }
             return $return;
         }
@@ -884,32 +869,33 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         */
         public function render_admin_page() {
             // code php of admin page
-
             ?>
 
             <script type='text/javascript'>
-                // code javascript
-                
-                $(document).ready(function() {
-                    $('#calendar').fullCalendar({
-                        loading: function(bool) {
-                            // funcao de loading para caregar
-                            $('#loading').toggle(bool);
-                            
-                        }
-                    });
-                });
-                
-                $('#calendar').ready(function() {
-                    $('.fc-day').bind('click', function(event) {
-                        console.log($(this).attr('data-date'))
-                    });
-                });
+            // code javascript
+            $(document).ready(function() {
+                $('#calendar').fullCalendar({
+                    dayClick: function(date) {
+                        //limpar selecionado
+                        $('.fc-day').css('background-color', '');
 
+                        //console data: ano / mes / dia
+                        console.log('Clicked on: ' + date.format());
+
+                        //trocar a cor do selecionado
+                        $(this).css('background-color', '#b1c903');
+                    },
+                    loading: function(bool) {
+                        // funcao de loading para caregar
+                        $('#loading').toggle(bool);
+                    }
+                });
+            });
             </script>
 
             <!-- body plugin -->
             <div class="wrap timetrader">
+
                 <div id="calendar"></div>
 
             </div>
