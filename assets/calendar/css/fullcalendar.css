@@ -14,10 +14,13 @@ font-size:1em;}
 .fc-unthemed .fc-popover{background-color:#fff;}
 .fc-unthemed .fc-divider,.fc-unthemed .fc-popover .fc-header{background:#eee;}
 .fc-unthemed .fc-popover .fc-header .fc-close{color:#666;}
-/*css para hoje*/.fc-unthemed .fc-today{background:#fcf8e3;}
-.fc-highlight{/* when user is selecting cells */background:#bce8f1;opacity:.3;filter:alpha(opacity=30);/* for IE */}
-.fc-bgevent{/* default look for background events */background:rgb(143,223,130);opacity:.3;filter:alpha(opacity=30);/* for IE */}
-.fc-nonbusiness{/* default look for non-business-hours areas *//* will inherit .fc-bgevent's styles */background:#d7d7d7;}
+
+/*css para hoje*/
+.fc-unthemed .fc-today{background:#fcf8e3;}
+.fc-day{border-radius: 50%;cursor: pointer;}
+.fc-highlight{	/* when user is selecting cells */background:#bce8f1;opacity:.3;filter:alpha(opacity=30);/* for IE */}
+.fc-bgevent{	/* default look for background events */background:rgb(143,223,130);opacity:.3;filter:alpha(opacity=30);/* for IE */}
+.fc-nonbusiness{	/* default look for non-business-hours areas *//* will inherit .fc-bgevent's styles */background:#d7d7d7;}
 
 /* Icons (inline elements with styled text that mock arrow icons)
 --------------------------------------------------------------------------------------------------*/
@@ -40,7 +43,7 @@ NOTE: use percentage font sizes or else old IE chokes
 .fc-icon-x:after{content:"\000D7";font-size:200%;top:6%;}
 
 /*display calendar*/
-.fc-day-header {text-transform: uppercase;font-size: 16px;}
+.fc-day-header{text-transform:uppercase;font-size:16px;}
 
 /* Buttons (styled <button> tags, normalized to work cross-browser)
 --------------------------------------------------------------------------------------------------*/
@@ -276,6 +279,7 @@ padding-top:1px; /* add a pixel to make sure there are 2px padding above events 
 .fc-basic-view .fc-week-number{text-align:center;}
 .fc-basic-view .fc-week-number span{	/* work around the way we do column resizing and ensure a minimum width */
 display:inline-block;min-width:1.25em;}
+
 /*.fc-ltr .fc-basic-view .fc-day-number{text-align:right;}*/
 .fc-ltr .fc-basic-view .fc-day-number{text-align:center;}
 .fc-rtl .fc-basic-view .fc-day-number{text-align:left;}
