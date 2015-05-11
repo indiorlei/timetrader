@@ -271,37 +271,23 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * Rehister admin styles
         */
         public function register_admin_styles() {
-            
             wp_enqueue_style( 'timetrader-fullcalendar-styles', TIMETRADER_ASSETS_URL . 'calendar/css/fullcalendar.css', false, TIMETRADER_VERSION );
-
-
             do_action( 'timetrader_register_admin_styles' );
         }
-
 
         /**
         * Register admin JavaScript
         */
         public function register_admin_scripts() {
-
             // media library dependencies
             wp_enqueue_media();
-
             // plugin dependencies
             wp_enqueue_script( 'jquery-ui-core', array( 'jquery' ) );
             wp_enqueue_script( 'jquery-ui-sortable', array( 'jquery', 'jquery-ui-core' ) );
-
             wp_enqueue_script( 'timetrader-calendar-moment', TIMETRADER_ASSETS_URL . 'calendar/js/moment.min.js', array( 'jquery' ), TIMETRADER_VERSION );
             wp_enqueue_script( 'timetrader-calendar-fullcalendar', TIMETRADER_ASSETS_URL . 'calendar/js/fullcalendar.min.js', array( 'jquery' ), TIMETRADER_VERSION );
-
-            // wp_enqueue_script( 'timetrader-colorbox', TIMETRADER_ASSETS_URL . 'colorbox/jquery.colorbox-min.js', array( 'jquery' ), TIMETRADER_VERSION );
-            // wp_enqueue_script( 'timetrader-tipsy', TIMETRADER_ASSETS_URL . 'tipsy/jquery.tipsy.js', array( 'jquery' ), TIMETRADER_VERSION );
-            // wp_enqueue_script( 'timetrader-admin-script', TIMETRADER_ASSETS_URL . 'timetrader/admin.js', array( 'jquery', 'timetrader-tipsy', 'media-upload' ), TIMETRADER_VERSION );
-
-
             wp_dequeue_script( 'link' ); // WP Posts Filter Fix (Advanced Settings not toggling)
             wp_dequeue_script( 'ai1ec_requirejs' ); // All In One Events Calendar Fix (Advanced Settings not toggling)
-
             $this->localize_admin_scripts();
             do_action( 'timetrader_register_admin_scripts' );
         }
@@ -912,15 +898,24 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             ?>
 
             <script type='text/javascript'>
-            // code javascript
-            $(document).ready(function() {
-                $('#calendar').fullCalendar({
-                    loading: function(bool) {
-                        // funcao de loading para caregar
-                        $('#loading').toggle(bool);
-                    }
+                // code javascript
+                
+                $(document).ready(function() {
+                    $('#calendar').fullCalendar({
+                        loading: function(bool) {
+                            // funcao de loading para caregar
+                            $('#loading').toggle(bool);
+                            
+                        }
+                    });
                 });
-            });
+                
+                $('#calendar').ready(function() {
+                    $('.fc-day').bind('click', function(event) {
+                        console.log($(this).attr('data-date'))
+                    });
+                });
+
             </script>
 
             <!-- body plugin -->

@@ -21,10 +21,12 @@ font-size:1em;}
 .fc-unthemed .fc-divider,
 .fc-unthemed .fc-popover .fc-header{background:#eee;}
 .fc-unthemed .fc-popover .fc-header .fc-close{color:#666;}
-.fc-unthemed .fc-today{background:#fcf8e3;}
-.fc-highlight{	/* when user is selecting cells */background:#bce8f1;opacity:.3;filter:alpha(opacity=30); /* for IE */}
-.fc-bgevent{	/* default look for background events */background:rgb(143,223,130);opacity:.3;filter:alpha(opacity=30); /* for IE */}
-.fc-nonbusiness{	/* default look for non-business-hours areas *//* will inherit .fc-bgevent's styles */background:#d7d7d7;}
+
+.fc-unthemed .fc-today{background:#fcf8e3;}/*css para hoje*/
+
+.fc-highlight{/* when user is selecting cells */background:#bce8f1;opacity:.3;filter:alpha(opacity=30);/* for IE */}
+.fc-bgevent{/* default look for background events */background:rgb(143,223,130);opacity:.3;filter:alpha(opacity=30);/* for IE */}
+.fc-nonbusiness{/* default look for non-business-hours areas *//* will inherit .fc-bgevent's styles */background:#d7d7d7;}
 
 /* Icons (inline elements with styled text that mock arrow icons)
 --------------------------------------------------------------------------------------------------*/
@@ -36,7 +38,7 @@ Acceptable font-family overrides for individual icons:
 "Times New Roman", serif
 NOTE: use percentage font sizes or else old IE chokes
 */
-.fc-icon:after{position:relative;margin:0 -1em; /* ensures character will be centered, regardless of width */}
+.fc-icon:after{position:relative;margin:0 -1em;/* ensures character will be centered, regardless of width */}
 .fc-icon-left-single-arrow:after{content:"\02039";font-weight:bold;font-size:200%;top:-7%;left:3%;}
 .fc-icon-right-single-arrow:after{content:"\0203A";font-weight:bold;font-size:200%;top:-7%;left:-3%;}
 .fc-icon-left-double-arrow:after{content:"\000AB";font-size:160%;top:-7%;}
