@@ -31,6 +31,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             $this->setup_filters();
             $this->setup_shortcode();
             $this->register_slide_types();
+            $this->create_tables();
         }
 
         private function define_constants() {
@@ -42,18 +43,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
         private function plugin_classes() {
             return array(
-                // 'timetrader'             => TIMETRADER_PATH . 'includes/slider/timetrader.class.php',
-                // 'metacoinslider'         => TIMETRADER_PATH . 'includes/slider/timetrader.coin.class.php',
-                // 'metaflexslider'         => TIMETRADER_PATH . 'includes/slider/timetrader.flex.class.php',
-                // 'metanivoslider'         => TIMETRADER_PATH . 'includes/slider/timetrader.nivo.class.php',
-                // 'metaresponsiveslider'   => TIMETRADER_PATH . 'includes/slider/timetrader.responsive.class.php',
-                // 'metaslide'              => TIMETRADER_PATH . 'includes/slide/metaslide.class.php',
-                // 'metaimageslide'         => TIMETRADER_PATH . 'includes/slide/metaslide.image.class.php',
-                // 'timetraderimagehelper'  => TIMETRADER_PATH . 'includes/timetrader.imagehelper.class.php',
-
                 'timetradersystemcheck'  => TIMETRADER_PATH . 'includes/timetrader.systemcheck.class.php',
-
-                // 'timetrader_widget'      => TIMETRADER_PATH . 'includes/timetrader.widget.class.php',
                 // 'simple_html_dom'        => TIMETRADER_PATH . 'includes/simple_html_dom.php'
                 );
         }
@@ -1056,6 +1046,68 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
             return $html->save();
         }
+
+
+        private function create_tables() {
+            global $wpdb;
+
+            $charset_collate = $wpdb->get_charset_collate();
+
+            $sql = "CREATE TABLE {$wpdb->prefix}timetrader_reservation (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    client_id mediumint(9) NOT NULL,
+                    subject varchar(200),
+                    description varchar(1000),
+                    status_id mediumint(9) NOT NULL,
+                    UNIQUE KEY id (id)
+                ) $charset_collate;
+                CREATE TABLE {$wpdb->prefix}timetrader_status (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    description varchar(45),
+                    UNIQUE KEY id (id)
+                ) $charset_collate;
+                CREATE TABLE {$wpdb->prefix}timetrader_client (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    name varchar(45),
+                    email varchar(45),
+                    telephone varchar(45),
+                    age int,
+                    gender varchar(45),
+                    relative varchar(45),
+                    states varchar(45),
+                    skype varchar(45),
+                    UNIQUE KEY id (id)
+                ) $charset_collate;
+                CREATE TABLE {$wpdb->prefix}timetrader_date_available (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    date_available DATE,
+                    UNIQUE KEY id (id)
+                ) $charset_collate;
+                CREATE TABLE {$wpdb->prefix}timetrader_time_available (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    time_available DATE,
+                    UNIQUE KEY id (id)
+                ) $charset_collate;
+                CREATE TABLE {$wpdb->prefix}timetrader_time_available (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    time_available_id mediumint(9) NOT NULL,
+                    date_available_id mediumint(9) NOT NULL,
+                    UNIQUE KEY id (id)
+                ) $charset_collate;";
+
+            require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+            dbDelta( $sql );
+
+            // $wpdb->insert( $table_name, array(
+            //  'time' => current_time( 'mysql' ),
+            //  'name' => $welcome_name,
+            //  'text' => $welcome_text,
+            //  )
+            // );
+        }
+
+
+
     }
 
 endif;
