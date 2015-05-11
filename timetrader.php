@@ -61,6 +61,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         private function includes() {
 
             $autoload_is_disabled = defined( 'TIMETRADER_AUTOLOAD_CLASSES' ) && TIMETRADER_AUTOLOAD_CLASSES === false;
+            
             if ( function_exists( "spl_autoload_register" ) && ! ( $autoload_is_disabled ) ) {
                 // >= PHP 5.2 - Use auto loading
                 if ( function_exists( "__autoload" ) ) {
@@ -101,17 +102,16 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         */
         private function setup_actions() {
 
-            add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9553 );
+            add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9554 );
 
             add_action( 'init', array( $this, 'register_post_type' ) );
             add_action( 'init', array( $this, 'register_taxonomy' ) );
             add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
             add_action( 'admin_footer', array( $this, 'admin_footer' ), 11 );
-            
+
             add_action( 'widgets_init', array( $this, 'register_timetrader_widget' ) );
             
             add_action( 'admin_post_timetrader_preview', array( $this, 'do_preview' ) );
-            add_action( 'admin_post_timetrader_hide_go_pro_page', array( $this, 'hide_go_pro_page' ) );
             add_action( 'admin_post_timetrader_switch_view', array( $this, 'switch_view' ) );
             add_action( 'admin_post_timetrader_delete_slide', array( $this, 'delete_slide' ) );
             add_action( 'admin_post_timetrader_delete_slider', array( $this, 'delete_slider' ) );
@@ -131,10 +131,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             add_filter( 'media_upload_tabs', array( $this, 'custom_media_upload_tab_name' ), 998 );
             add_filter( 'media_view_strings', array( $this, 'custom_media_uploader_tabs' ), 5 );
             add_filter( 'media_buttons_context', array( $this, 'insert_timetrader_button' ) );
-            
-            // // add 'go pro' link to plugin options
-            // $plugin = plugin_basename( __FILE__ );
-            // add_filter( "plugin_action_links_{$plugin}", array( $this, 'upgrade_to_pro_link' ) );
+
         }
 
         /**
@@ -203,65 +200,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             add_action( 'admin_print_scripts-' . $page, array( $this, 'register_admin_scripts' ) );
             add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
             add_action( 'load-' . $page, array( $this, 'help_tab' ) );
-            
-            // if ( ! is_plugin_active( 'timetrader-pro/timetrader-pro.php' ) && get_user_meta( $user_ID, "timetrader_hide_go_pro", true ) !== 'true' ) {
-            // $page = add_submenu_page(
-            // 'timetrader',
-            // __( 'Go Pro!', 'timetrader' ),
-            // __( 'Go Pro!', 'timetrader' ),
-            // $capability,
-            // 'timetrader-go-pro',
-            // array( $this, 'go_pro_page' )
-            // );
-            // add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
-            // }
-        }
-
-
-        /**
-        * Go Pro page content
-        */
-        public function go_pro_page() {
-            // $hide_link = '<a href="' . admin_url( "admin-post.php?action=timetrader_hide_go_pro_page" ) . '">Hide this page</a>';
-            // $link = apply_filters( 'timetrader_hoplink', 'http://www.timetrader.com/upgrade/' );
-            // $link .= '?utm_source=lite&amp;utm_medium=nag&amp;utm_campaign=pro';
-            // $gopro_link = "<a class='button button-primary' href='{$link}' target='_blank'>Find out more</a>";
-            // $support_link = '<a href="https://wordpress.org/support/plugin/timetrader">Support</a>';
-            // $documentation_link = '<a href="http://www.timetrader.com/documentation/">Documentation</a>';
-            
-            ?>
-            
-            <!-- <h2>Supercharge Your Sliders with Time Trader Pro!</h2>
-            <ul class='timetrader_gopro'>
-                <li>Create <b>animated HTML slides</b> using the drag &amp; drop layer editor (WYSIWYG)</li>
-                <li>Insert <b>YouTube</b> and <b>Vimeo</b> videos into your slideshows</li>
-                <li>Automatically populate your slideshows with your <b>latest blog posts</b> or custom post types</li>
-                <li>Customize the look of your slideshows with the <b>Theme Editor</b> (25+ settings including custom arrow images, dot colors and caption styling)</li>
-                <li>Give your slideshows a gallery feel with <b>thumbnail navigation</b></li>
-                <li>Feature <b>WooCommerce</b> products in your slideshows</li>
-                <li>Show your latest events from <b>The Events Calendar</b> plugin</li>
-                <li><b>Easy to install</B> - Time Trader Pro installs as a seperate plugin alongside Time Trader and seamlessly adds in the new functionality</li>
-                <li><b>Easy to update</b> - new updates will be displayed on your plugins page (just like your other plugins!)</li>
-                <li>Upgrade with confidence with our <b>30 day no questions money back guarantee</b></li>
-                <li>Time Trader Pro users receive <b>priority support</b> from our dedicated team, we’re on hand to help you get the most of Time Trader</li>
-            </ul>
-            <p><?php echo $gopro_link; ?></p>
-            <p><?php echo $support_link; ?> <?php echo $documentation_link; ?></p>
-            <p><em>Don't want to see this? <?php echo $hide_link; ?></em></p> -->
-            
-            <?php
-        }
-
-
-        /**
-        *  Store the users preference to hide the go pro page.
-        */
-        public function hide_go_pro_page() {
-            // global $user_ID;
-            // if ( ! get_user_meta( $user_ID, "timetrader_hide_go_pro" ) ) {
-            //     add_user_meta( $user_ID, "timetrader_hide_go_pro", "true" );
-            // }
-            // wp_redirect( admin_url( "admin.php?page=timetrader" ) );
         }
 
 
@@ -394,13 +332,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             if ( isset( $_GET['slider_id'] ) && absint( $_GET['slider_id'] ) > 0 ) {
                 $id = absint( $_GET['slider_id'] );
                 ?>
-                
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <style type='text/css'>
-                        body, html {overflow: hidden;margin: 0;padding: 0;}
-                    </style>
+                    <style type='text/css'>body, html {overflow:hidden;margin:0;padding:0;}</style>
                     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                     <meta http-equiv="Pragma" content="no-cache" />
                     <meta http-equiv="Expires" content="0" />
@@ -410,7 +345,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     <?php wp_footer(); ?>
                 </body>
                 </html>
-                
                 <?php
             }
             die();
@@ -646,34 +580,39 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * Create a new slider
         */
         public function create_slider() {
-            // // check nonce
-            // check_admin_referer( "timetrader_create_slider" );
-            // $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-            // if ( ! current_user_can( $capability ) ) {
-            // return;
-            // }
-            // $defaults = array();
-            // // if possible, take a copy of the last edited slider settings in place of default settings
-            // if ( $last_modified = $this->find_slider( 'modified', 'DESC' ) ) {
-            // $defaults = get_post_meta( $last_modified, 'timetrader_settings', true );
-            // }
-            // // insert the post
-            // $id = wp_insert_post( array(
-            // 'post_title' => __( "New Slider", "timetrader" ),
-            // 'post_status' => 'publish',
-            // 'post_type' => 'timetrader'
-            // )
-            // );
-            // // use the default settings if we can't find anything more suitable.
-            // if ( empty( $defaults ) ) {
-            // $slider = new timetrader( $id, array() );
-            // $defaults = $slider->get_default_parameters();
-            // }
-            // // insert the post meta
-            // add_post_meta( $id, 'timetrader_settings', $defaults, true );
-            // // create the taxonomy term, the term is the ID of the slider itself
-            // wp_insert_term( $id, 'timetrader' );
-            // wp_redirect( admin_url( "admin.php?page=timetrader&id={$id}" ) );
+            // check nonce
+            check_admin_referer( "timetrader_create_slider" );
+            $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
+            if ( ! current_user_can( $capability ) ) {
+                return;
+            }
+            $defaults = array();
+            
+            // if possible, take a copy of the last edited slider settings in place of default settings
+            if ( $last_modified = $this->find_slider( 'modified', 'DESC' ) ) {
+                $defaults = get_post_meta( $last_modified, 'timetrader_settings', true );
+            }
+
+            // insert the post
+            $id = wp_insert_post( array(
+                'post_title' => __( "New Slider", "timetrader" ),
+                'post_status' => 'publish',
+                'post_type' => 'timetrader'
+                )
+            );
+
+            // use the default settings if we can't find anything more suitable.
+            if ( empty( $defaults ) ) {
+                $slider = new timetrader( $id, array() );
+                $defaults = $slider->get_default_parameters();
+            }
+
+            // insert the post meta
+            add_post_meta( $id, 'timetrader_settings', $defaults, true );
+
+            // create the taxonomy term, the term is the ID of the slider itself
+            wp_insert_term( $id, 'timetrader' );
+            wp_redirect( admin_url( "admin.php?page=timetrader&id={$id}" ) );
         }
 
 
@@ -960,526 +899,26 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
 
         /**
-        * Render the admin page (tabs, slides, settings)
+        * Render the admin page
         */
         public function render_admin_page() {
-        // default to the latest slider
-            $slider_id = $this->find_slider( 'modified', 'DESC' );
-        // load a slider by ID
-            if ( isset( $_REQUEST['id'] ) ) {
-                $temp_id = absint( $_REQUEST['id'] );
-        // check valid post ID
-                if ( get_post( $temp_id ) ) {
-                    $slider_id = $temp_id;
-                }
-            }
-        // finally, set the slider
-            if ( $slider_id > 0 ) {
-                $this->set_slider( $slider_id );
-            }
-            $this->upgrade_to_pro_cta();
-            $this->do_system_check();
-            $slider_id = $this->slider ? $this->slider->id : 0;
+            // code php of admin page
+
             ?>
+
             <script type='text/javascript'>
-            var timetrader_slider_id = <?php echo $slider_id; ?>;
+            // code javascript
             </script>
+
+            <!-- body plugin -->
             <div class="wrap timetrader">
-                <form accept-charset="UTF-8" action="<?php echo admin_url( 'admin-post.php'); ?>" method="post">
-                    <input type="hidden" name="action" value="timetrader_update_slider">
-                    <input type="hidden" name="slider_id" value="<?php echo $slider_id; ?>">
-                    <?php wp_nonce_field( 'timetrader_update_slider' ); ?>
-                    <?php $this->print_slideshow_selector(); ?>
-                    <?php if ( ! $this->slider ) return; ?>
-                    <div id='poststuff'>
-                        <div id='post-body' class='metabox-holder columns-2'>
-                            <div id='post-body-content'>
-                                <div class="left">
-                                    <?php do_action( "timetrader_admin_table_before", $this->slider->id ); ?>
-                                    <table class="widefat sortable">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 100px;">
-                                                    <h3><?php _e( "Slides", "timetrader" ) ?></h3>
-                                                    <?php do_action( "timetrader_admin_table_header_left", $this->slider->id ); ?>
-                                                </th>
-                                                <th>
-                                                    <a href='#' class='button alignright add-slide' data-editor='content' title='<?php _e( "Add Slide", "timetrader" ) ?>'>
-                                                        <span class='wp-media-buttons-icon'></span> <?php _e( "Add Slide", "timetrader" ) ?>
-                                                    </a>
-                                                    <?php do_action( "timetrader_admin_table_header_right", $this->slider->id ); ?>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $this->slider->render_admin_slides();
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                    <?php do_action( "timetrader_admin_table_after", $this->slider->id ); ?>
-                                </div>
-                            </div>
-                            <div id="postbox-container-1" class="postbox-container">
-                                <div class='right'>
-                                    <div class="ms-postbox" id="timetrader_configuration">
-                                        <h3 class='configuration'>
-                                            <?php _e( "Settings", "timetrader" ) ?>
-                                            <input class='alignright button button-primary' type='submit' name='save' id='ms-save' value='<?php _e( "Save", "timetrader" ) ?>' />
-                                            <input class='alignright button button-primary' type='submit' name='preview' id='ms-preview' value='<?php _e( "Save & Preview", "timetrader" ) ?>' data-slider_id='<?php echo $this->slider->id ?>' data-slider_width='<?php echo $this->slider->get_setting( 'width' ) ?>' data-slider_height='<?php echo $this->slider->get_setting( 'height' ) ?>' />
-                                            <span class="spinner"></span>
-                                        </h3>
-                                        <div class="inside">
-                                            <table class="settings">
-                                                <tbody>
-                                                    <?php
-                                                    $aFields = array(
-                                                        'type' => array(
-                                                            'priority' => 0,
-                                                            'type' => 'slider-lib',
-                                                            'value' => $this->slider->get_setting( 'type' ),
-                                                            'options' => array(
-                                                                'flex'       => array( 'label' => __( "Flex Slider", "timetrader" ) ),
-                                                                'responsive' => array( 'label' => __( "R. Slides", "timetrader" ) ),
-                                                                'nivo'       => array( 'label' => __( "Nivo Slider", "timetrader" ) ),
-                                                                'coin'       => array( 'label' => __( "Coin Slider", "timetrader" ) )
-                                                                )
-                                                            ),
-                                                        'width' => array(
-                                                            'priority' => 10,
-                                                            'type' => 'number',
-                                                            'size' => 3,
-                                                            'min' => 0,
-                                                            'max' => 9999,
-                                                            'step' => 1,
-                                                            'value' => $this->slider->get_setting( 'width' ),
-                                                            'label' => __( "Width", "timetrader" ),
-                                                            'class' => 'coin flex responsive nivo',
-                                                            'helptext' => __( "Slideshow width", "timetrader" ),
-                                                            'after' => __( "px", "timetrader" )
-                                                            ),
-                                                        'height' => array(
-                                                            'priority' => 20,
-                                                            'type' => 'number',
-                                                            'size' => 3,
-                                                            'min' => 0,
-                                                            'max' => 9999,
-                                                            'step' => 1,
-                                                            'value' => $this->slider->get_setting( 'height' ),
-                                                            'label' => __( "Height", "timetrader" ),
-                                                            'class' => 'coin flex responsive nivo',
-                                                            'helptext' => __( "Slideshow height", "timetrader" ),
-                                                            'after' => __( "px", "timetrader" )
-                                                            ),
-                                                        'effect' => array(
-                                                            'priority' => 30,
-                                                            'type' => 'select',
-                                                            'value' => $this->slider->get_setting( 'effect' ),
-                                                            'label' => __( "Effect", "timetrader" ),
-                                                            'class' => 'effect coin flex responsive nivo',
-                                                            'helptext' => __( "Slide transition effect", "timetrader" ),
-                                                            'options' => array(
-                                                                'random'             => array( 'class' => 'option coin nivo' , 'label' => __( "Random", "timetrader" ) ),
-                                                                'swirl'              => array( 'class' => 'option coin', 'label' => __( "Swirl", "timetrader" ) ),
-                                                                'rain'               => array( 'class' => 'option coin', 'label' => __( "Rain", "timetrader" ) ),
-                                                                'straight'           => array( 'class' => 'option coin', 'label' => __( "Straight", "timetrader" ) ),
-                                                                'sliceDown'          => array( 'class' => 'option nivo', 'label' => __( "Slide Down", "timetrader" ) ),
-                                                                'sliceUp'            => array( 'class' => 'option nivo', 'label' => __( "Slice Up", "timetrader" ) ),
-                                                                'sliceUpLeft'        => array( 'class' => 'option nivo', 'label' => __( "Slide Up Left", "timetrader" ) ),
-                                                                'sliceUpDown'        => array( 'class' => 'option nivo', 'label' => __( "Slice Up Down", "timetrader" ) ),
-                                                                'slideUpDownLeft'    => array( 'class' => 'option nivo', 'label' => __( "Slide Up Down Left", "timetrader" ) ),
-                                                                'fold'               => array( 'class' => 'option nivo', 'label' => __( "Fold", "timetrader" ) ),
-                                                                'fade'               => array( 'class' => 'option nivo flex responsive', 'label' => __( "Fade", "timetrader" ) ),
-                                                                'slideInRight'       => array( 'class' => 'option nivo', 'label' => __( "Slide In Right", "timetrader" ) ),
-                                                                'slideInLeft'        => array( 'class' => 'option nivo', 'label' => __( "Slide In Left", "timetrader" ) ),
-                                                                'boxRandom'          => array( 'class' => 'option nivo', 'label' => __( "Box Random", "timetrader" ) ),
-                                                                'boxRain'            => array( 'class' => 'option nivo', 'label' => __( "Box Rain", "timetrader" ) ),
-                                                                'boxRainReverse'     => array( 'class' => 'option nivo', 'label' => __( "Box Rain Reverse", "timetrader" ) ),
-                                                                'boxRainGrowReverse' => array( 'class' => 'option nivo', 'label' => __( "Box Rain Grow Reverse", "timetrader" ) ),
-                                                                'slide'              => array( 'class' => 'option flex', 'label' => __( "Slide", "timetrader" ) )
-                                                                ),
-        ),
-        'theme' => array(
-            'priority' => 40,
-            'type' => 'theme',
-            'value' => $this->slider->get_setting( 'theme' ),
-            'label' => __( "Theme", "timetrader" ),
-            'class' => 'effect coin flex responsive nivo',
-            'helptext' => __( "Slideshow theme", "timetrader" ),
-            'options' => array(
-                'default' => array( 'class' => 'option nivo flex coin responsive' , 'label' => __( "Default", "timetrader" ) ),
-                'dark'    => array( 'class' => 'option nivo', 'label' => __( "Dark (Nivo)", "timetrader" ) ),
-                'light'   => array( 'class' => 'option nivo', 'label' => __( "Light (Nivo)", "timetrader" ) ),
-                'bar'     => array( 'class' => 'option nivo', 'label' => __( "Bar (Nivo)", "timetrader" ) ),
-                ),
-            ),
-        'links' => array(
-            'priority' => 50,
-            'type' => 'checkbox',
-            'label' => __( "Arrows", "timetrader" ),
-            'class' => 'option coin flex nivo responsive',
-            'checked' => $this->slider->get_setting( 'links' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Show the previous/next arrows", "timetrader" )
-            ),
-        'navigation' => array(
-            'priority' => 60,
-            'type' => 'navigation',
-            'label' => __( "Navigation", "timetrader" ),
-            'class' => 'option coin flex nivo responsive',
-            'value' => $this->slider->get_setting( 'navigation' ),
-            'helptext' => __( "Show the slide navigation bullets", "timetrader" ),
-            'options' => array(
-                'false'      => array( 'label' => __( "Hidden", "timetrader" ) ),
-                'true'       => array( 'label' => __( "Dots", "timetrader" ) ),
-                )
-            ),
-        );
-        if ( $this->get_view() == 'dropdown' ) {
-            $aFields['title'] = array(
-                'type' => 'title',
-                'priority' => 5,
-                'class' => 'option flex nivo responsive coin',
-                'value' => get_the_title($this->slider->id),
-                'label' => __( "Title", "timetrader" ),
-                'helptext' => __( "Slideshow title", "timetrader" )
-                );
+
+            </div>
+
+            <?php
         }
-        $aFields = apply_filters( 'timetrader_basic_settings', $aFields, $this->slider );
-        echo $this->build_settings_rows( $aFields );
-        ?>
-        </tbody>
-        </table>
-        </div>
-        </div>
-        <div class="ms-postbox ms-toggle closed" id="timetrader_advanced_settings">
-            <div class="handlediv" title="Click to toggle"><br></div><h3 class="hndle"><span><?php _e( "Advanced Settings", "timetrader" ) ?></span></h3>
-            <div class="inside">
-                <table>
-                    <tbody>
-                        <?php
-                        $aFields = array(
-                            'fullWidth' => array(
-                                'priority' => 5,
-                                'type' => 'checkbox',
-                                'label' => __( "Stretch", "timetrader" ),
-                                'class' => 'option flex nivo responsive',
-                                'after' => __( "100% wide output", "timetrader" ),
-                                'checked' => $this->slider->get_setting( 'fullWidth' ) == 'true' ? 'checked' : '',
-                                'helptext' => __( "Stretch the slideshow output to fill it's parent container", "timetrader" )
-                                ),
-                            'center' => array(
-                                'priority' => 10,
-                                'type' => 'checkbox',
-                                'label' => __( "Center align", "timetrader" ),
-                                'class' => 'option coin flex nivo responsive',
-                                'checked' => $this->slider->get_setting( 'center' ) == 'true' ? 'checked' : '',
-                                'helptext' => __( "Center align the slideshow", "timetrader" )
-                                ),
-                            'autoPlay' => array(
-                                'priority' => 20,
-                                'type' => 'checkbox',
-                                'label' => __( "Auto play", "timetrader" ),
-                                'class' => 'option flex nivo responsive',
-                                'checked' => $this->slider->get_setting( 'autoPlay' ) == 'true' ? 'checked' : '',
-                                'helptext' => __( "Transition between slides automatically", "timetrader" )
-                                ),
-                            'smartCrop' => array(
-                                'priority' => 30,
-                                'type' => 'select',
-                                'label' => __( "Image Crop", "timetrader" ),
-                                'class' => 'option coin flex nivo responsive',
-                                'value' => $this->slider->get_setting( 'smartCrop' ),
-                                'options' => array(
-                                    'true' => array( 'label' => __( "Smart Crop", "timetrader" ), 'class' => '' ),
-                                    'false' => array( 'label' => __( "Standard", "timetrader" ), 'class' => '' ),
-                                    'disabled' => array( 'label' => __( "Disabled", "timetrader" ), 'class' => '' ),
-                                    'disabled_pad' => array( 'label' => __( "Disabled (Smart Pad)", "timetrader" ), 'class' => 'option flex' ),
-                                    ),
-                                'helptext' => __( "Smart Crop ensures your responsive slides are cropped to a ratio that results in a consistent slideshow size", "timetrader" )
-                                ),
-        'carouselMode' => array(
-            'priority' => 40,
-            'type' => 'checkbox',
-            'label' => __( "Carousel mode", "timetrader" ),
-            'class' => 'option flex showNextWhenChecked',
-            'checked' => $this->slider->get_setting( 'carouselMode' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Display multiple slides at once. Slideshow output will be 100% wide.", "timetrader" )
-            ),
-        'carouselMargin' => array(
-            'priority' => 45,
-            'min' => 0,
-            'max' => 9999,
-            'step' => 1,
-            'type' => 'number',
-            'label' => __( "Carousel margin", "timetrader" ),
-            'class' => 'option flex',
-            'value' => $this->slider->get_setting( 'carouselMargin' ),
-            'helptext' => __( "Pixel margin between slides in carousel.", "timetrader" ),
-            'after' => __( "px", "timetrader" )
-            ),
-        'random' => array(
-            'priority' => 50,
-            'type' => 'checkbox',
-            'label' => __( "Random", "timetrader" ),
-            'class' => 'option coin flex nivo responsive',
-            'checked' => $this->slider->get_setting( 'random' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Randomise the order of the slides", "timetrader" )
-            ),
-        'hoverPause' => array(
-            'priority' => 60,
-            'type' => 'checkbox',
-            'label' => __( "Hover pause", "timetrader" ),
-            'class' => 'option coin flex nivo responsive',
-            'checked' => $this->slider->get_setting( 'hoverPause' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Pause the slideshow when hovering over slider, then resume when no longer hovering.", "timetrader" )
-            ),
-        'reverse' => array(
-            'priority' => 70,
-            'type' => 'checkbox',
-            'label' => __( "Reverse", "timetrader" ),
-            'class' => 'option flex',
-            'checked' => $this->slider->get_setting( 'reverse' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Reverse the animation direction", "timetrader" )
-            ),
-        'delay' => array(
-            'priority' => 80,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 500,
-            'max' => 10000,
-            'step' => 100,
-            'value' => $this->slider->get_setting( 'delay' ),
-            'label' => __( "Slide delay", "timetrader" ),
-            'class' => 'option coin flex responsive nivo',
-            'helptext' => __( "How long to display each slide, in milliseconds", "timetrader" ),
-            'after' => __( "ms", "timetrader" )
-            ),
-        'animationSpeed' => array(
-            'priority' => 90,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 0,
-            'max' => 2000,
-            'step' => 100,
-            'value' => $this->slider->get_setting( 'animationSpeed' ),
-            'label' => __( "Animation speed", "timetrader" ),
-            'class' => 'option flex responsive nivo',
-            'helptext' => __( "Set the speed of animations, in milliseconds", "timetrader" ),
-            'after' => __( "ms", "timetrader" )
-            ),
-        'slices' => array(
-            'priority' => 100,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 0,
-            'max' => 20,
-            'step' => 1,
-            'value' => $this->slider->get_setting( 'slices' ),
-            'label' => __( "Number of slices", "timetrader" ),
-            'class' => 'option nivo',
-            'helptext' => __( "Number of slices", "timetrader" ),
-            'after' => __( "ms", "timetrader" )
-            ),
-        'spw' => array(
-            'priority' => 110,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 0,
-            'max' => 20,
-            'step' => 1,
-            'value' => $this->slider->get_setting( 'spw' ),
-            'label' => __( "Number of squares", "timetrader" ) . " (" . __( "Width", "timetrader" ) . ")",
-            'class' => 'option nivo',
-            'helptext' => __( "Number of squares", "timetrader" ),
-            'after' => ''
-            ),
-        'sph' => array(
-            'priority' => 120,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 0,
-            'max' => 20,
-            'step' => 1,
-            'value' => $this->slider->get_setting( 'sph' ),
-            'label' => __( "Number of squares", "timetrader" ) . " (" . __( "Height", "timetrader" ) . ")",
-            'class' => 'option nivo',
-            'helptext' => __( "Number of squares", "timetrader" ),
-            'after' => ''
-            ),
-        'direction' => array(
-            'priority' => 130,
-            'type' => 'select',
-            'label' => __( "Slide direction", "timetrader" ),
-            'class' => 'option flex',
-            'helptext' => __( "Select the sliding direction", "timetrader" ),
-            'value' => $this->slider->get_setting( 'direction' ),
-            'options' => array(
-                'horizontal' => array( 'label' => __( "Horizontal", "timetrader" ), 'class' => '' ),
-                'vertical' => array( 'label' => __( "Vertical", "timetrader" ), 'class' => '' ),
-                )
-            ),
-        'easing' => array(
-            'priority' => 140,
-            'type' => 'select',
-            'label' => __( "Easing", "timetrader" ),
-            'class' => 'option flex',
-            'helptext' => __( "Animation easing effect", "timetrader" ),
-            'value' => $this->slider->get_setting( 'easing' ),
-            'options' => $this->get_easing_options()
-            ),
-        'prevText' => array(
-            'priority' => 150,
-            'type' => 'text',
-            'label' => __( "Previous text", "timetrader" ),
-            'class' => 'option coin flex responsive nivo',
-            'helptext' => __( "Set the text for the 'previous' direction item", "timetrader" ),
-            'value' => $this->slider->get_setting( 'prevText' ) == 'false' ? '' : $this->slider->get_setting( 'prevText' )
-            ),
-        'nextText' => array(
-            'priority' => 160,
-            'type' => 'text',
-            'label' => __( "Next text", "timetrader" ),
-            'class' => 'option coin flex responsive nivo',
-            'helptext' => __( "Set the text for the 'next' direction item", "timetrader" ),
-            'value' => $this->slider->get_setting( 'nextText' ) == 'false' ? '' : $this->slider->get_setting( 'nextText' )
-            ),
-        'sDelay' => array(
-            'priority' => 170,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 0,
-            'max' => 500,
-            'step' => 10,
-            'value' => $this->slider->get_setting( 'sDelay' ),
-            'label' => __( "Square delay", "timetrader" ),
-            'class' => 'option coin',
-            'helptext' => __( "Delay between squares in ms", "timetrader" ),
-            'after' => __( "ms", "timetrader" )
-            ),
-        'opacity' => array(
-            'priority' => 180,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 0,
-            'max' => 1,
-            'step' => 0.1,
-            'value' => $this->slider->get_setting( 'opacity' ),
-            'label' => __( "Opacity", "timetrader" ),
-            'class' => 'option coin',
-            'helptext' => __( "Opacity of title and navigation", "timetrader" ),
-            'after' => ''
-            ),
-        'titleSpeed' => array(
-            'priority' => 190,
-            'type' => 'number',
-            'size' => 3,
-            'min' => 0,
-            'max' => 10000,
-            'step' => 100,
-            'value' => $this->slider->get_setting( 'titleSpeed' ),
-            'label' => __( "Caption speed", "timetrader" ),
-            'class' => 'option coin',
-            'helptext' => __( "Set the fade in speed of the caption", "timetrader" ),
-            'after' => __( "ms", "timetrader" )
-            ),
-        'developerOptions' => array(
-            'priority' => 195,
-            'type' => 'divider',
-            'class' => 'option coin flex responsive nivo',
-            'value' => __( "Developer options", "timetrader" )
-            ),
-        'cssClass' => array(
-            'priority' => 200,
-            'type' => 'text',
-            'label' => __( "CSS classes", "timetrader" ),
-            'class' => 'option coin flex responsive nivo',
-            'helptext' => __( "Specify any custom CSS Classes you would like to be added to the slider wrapper", "timetrader" ),
-            'value' => $this->slider->get_setting( 'cssClass' ) == 'false' ? '' : $this->slider->get_setting( 'cssClass' )
-            ),
-        'printCss' => array(
-            'priority' => 210,
-            'type' => 'checkbox',
-            'label' => __( "Print CSS", "timetrader" ),
-            'class' => 'option coin flex responsive nivo useWithCaution',
-            'checked' => $this->slider->get_setting( 'printCss' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Uncheck this is you would like to include your own CSS", "timetrader" )
-            ),
-        'printJs' => array(
-            'priority' => 220,
-            'type' => 'checkbox',
-            'label' => __( "Print JS", "timetrader" ),
-            'class' => 'option coin flex responsive nivo useWithCaution',
-            'checked' => $this->slider->get_setting( 'printJs' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Uncheck this is you would like to include your own Javascript", "timetrader" )
-            ),
-        'noConflict' => array(
-            'priority' => 230,
-            'type' => 'checkbox',
-            'label' => __( "No conflict mode", "timetrader" ),
-            'class' => 'option flex',
-            'checked' => $this->slider->get_setting( 'noConflict' ) == 'true' ? 'checked' : '',
-            'helptext' => __( "Delay adding the flexslider class to the slideshow", "timetrader" )
-            ),
-        );
-        $aFields = apply_filters( 'timetrader_advanced_settings', $aFields, $this->slider );
-        echo $this->build_settings_rows( $aFields );
-        ?>
-        </tbody>
-        </table>
-        </div>
-        </div>
-        <div class="ms-postbox shortcode ms-toggle" id="timetrader_usage">
-            <div class="handlediv" title="Click to toggle"><br></div><h3 class="hndle"><span><?php _e( "Usage", "timetrader" ) ?></span></h3>
-            <div class="inside">
-                <ul class='tabs'>
-                    <li rel='tab-1' class='selected'><?php _e( "Shortcode", "timetrader" ) ?></li>
-                    <li rel='tab-2'><?php _e( "Template Include", "timetrader" ) ?></li>
-                </ul>
-                <div class='tabs-content'>
-                    <div class='tab tab-1'>
-                        <p><?php _e( "Copy & paste the shortcode directly into any WordPress post or page.", "timetrader" ); ?></p>
-                        <input readonly='readonly' type='text' value='[timetrader id=<?php echo $this->slider->id ?>]' /></div>
-                        <div class='tab tab-2' style='display: none'>
-                            <p><?php _e( "Copy & paste this code into a template file to include the slideshow within your theme.", "timetrader" ); ?></p>
-                            <textarea readonly='readonly'>&lt;?php &#13;&#10;    echo do_shortcode("[timetrader id=<?php echo $this->slider->id ?>]"); &#13;&#10;?></textarea></div>
-                        </div>
-                    </div>
-                </div>
-                <?php if ( ! is_plugin_active('timetrader-pro/timetrader-pro.php') ) : ?>
-                <div class="ms-postbox social" id="timetrader_social">
-                    <div class="inside">
-                        <ul class='info'>
-                            <li style='width: 33%;'>
-                                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.timetrader.com" data-text="Check out Time Trader, an easy to use slideshow plugin for WordPress" data-hashtags="timetrader, wordpress, slideshow">Tweet</a>
-                                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                            </li>
-                            <li style='width: 34%;'>
-                                <div class="g-plusone" data-size="medium" data-href="http://www.timetrader.com"></div>
-                                <script type="text/javascript">
-                                (function() {
-                                    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-                                    po.src = 'https://apis.google.com/js/plusone.js';
-                                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-                                })();
-                                </script>
-                            </li>
-                            <li style='width: 33%;'>
-                                <iframe style='border:none; overflow:hidden; width:80px; height:21px;' src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fwptimetrader&amp;width=120&amp;layout=button_count&amp;action=like&amp;show_faces=true&amp;share=false&amp;height=21&amp;appId=156668027835524" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            <?php endif; ?>
-            <?php $url = wp_nonce_url( admin_url( "admin-post.php?action=timetrader_delete_slider&amp;slider_id={$this->slider->id}" ), "timetrader_delete_slider" ); ?>
-            <a class='delete-slider alignright button-secondary' href='<?php echo $url ?>'><?php _e( "Delete Slider", "timetrader" ) ?></a>
-        </div>
-        </div>
-        </div>
-        </div>
-        </form>
-        </div>
-        <?php
-        }
+
+
         /**
         * Append the 'Add Slider' button to selected admin pages
         */
