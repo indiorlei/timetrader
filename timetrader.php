@@ -878,10 +878,8 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     dayClick: function(date) {
                         //limpar selecionado
                         $('.fc-day').css('background-color', '');
-
                         //console data: ano / mes / dia
                         console.log('Clicked on: ' + date.format());
-
                         //trocar a cor do selecionado
                         $(this).css('background-color', '#b1c903');
                     },
@@ -895,9 +893,18 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
             <!-- body plugin -->
             <div class="wrap timetrader">
-
                 <div id="calendar"></div>
+                <form>
 
+
+                <?php
+                $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
+                foreach ($time_available as $key => $value) {
+                    echo '<input id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"> <label for="' . $value->id . '">' . $value->time_available . '</label><br>';
+                }
+                ?>
+
+                </form>
             </div>
 
             <?php
@@ -1045,6 +1052,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     subject varchar(200),
                     description varchar(1000),
                     status_id mediumint(9) NOT NULL,
+                    reservation_info mediumint(9) NOT NULL,
                     UNIQUE KEY id (id)
                 ) $charset_collate;
                 CREATE TABLE {$wpdb->prefix}timetrader_status (
@@ -1059,7 +1067,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     telephone varchar(45),
                     age int,
                     gender varchar(45),
-                    relative varchar(45),
+                    country varchar(45),
                     states varchar(45),
                     skype varchar(45),
                     UNIQUE KEY id (id)
@@ -1071,10 +1079,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 ) $charset_collate;
                 CREATE TABLE {$wpdb->prefix}timetrader_time_available (
                     id mediumint(9) NOT NULL AUTO_INCREMENT,
-                    time_available DATE,
+                    time_available DATETIME,
                     UNIQUE KEY id (id)
                 ) $charset_collate;
-                CREATE TABLE {$wpdb->prefix}timetrader_time_available (
+                CREATE TABLE {$wpdb->prefix}timetrader_reservation_info (
                     id mediumint(9) NOT NULL AUTO_INCREMENT,
                     time_available_id mediumint(9) NOT NULL,
                     date_available_id mediumint(9) NOT NULL,
@@ -1091,8 +1099,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             //  )
             // );
         }
-
-
 
     }
 

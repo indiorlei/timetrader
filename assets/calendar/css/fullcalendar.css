@@ -16,7 +16,7 @@ font-size:1em;}
 .fc-unthemed .fc-popover .fc-header .fc-close{color:#666;}
 
 /*css para hoje*/
-.fc-unthemed .fc-today{background:#fcf8e3;}
+.fc-unthemed .fc-today{/*css para hoje*//*background:#fcf8e3;*/}
 .fc-day{border-radius: 50%;cursor: pointer;}
 .fc-highlight{	/* when user is selecting cells */background:#bce8f1;opacity:.3;filter:alpha(opacity=30);/* for IE */}
 .fc-bgevent{	/* default look for background events */background:rgb(143,223,130);opacity:.3;filter:alpha(opacity=30);/* for IE */}
@@ -116,8 +116,10 @@ position:absolute;top:0;left:0;right:0;}
 --------------------------------------------------------------------------------------------------*/
 .fc table{width:100%;table-layout:fixed;border-collapse:collapse;border-spacing:0;font-size:1em; /* normalize cross-browser */}
 .fc th{text-align:center;}
-.fc th,.fc td{border-style:solid;border-width:1px;padding:0;vertical-align:top;}
-.fc td.fc-today{border-style:double; /* overcome neighboring borders */}
+.fc th,.fc td{/*border-style:solid;border-width:1px;padding:0;vertical-align:top;*/}
+
+
+.fc td.fc-today{css para hoje*//*css para hoje /*border-style:double;*/ /* overcome neighboring borders */}
 
 /* Fake Table Rows
 --------------------------------------------------------------------------------------------------*/
