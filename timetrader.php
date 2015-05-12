@@ -863,9 +863,23 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         */
         public function render_admin_page() {
             // code php of admin page
+            if( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
+                require_once( ABSPATH . 'wp-load.php' );
 
+                $date_available = $_POST['date_available'];
+
+                function insert( $date_available ) {
+                    global $wpdb;
+                    $table_date_available = $wpdb->prefix . 'timetrader_date_available';
+                    $wpdb->insert( $table_date_available, array(
+                        'date_available' => $date_available
+                        )
+                    );
+                }
+
+                insert( $date_available );
+            }
             ?>
-
             <script type='text/javascript'>
             // code javascript
             $(document).ready(function() {
@@ -881,55 +895,54 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     }
                 });
 
+                $('#reservation').bind('submit', function(event) {
+                    event.preventDefault();
+                    
+                    var date_available = $('#date_available').val();
+                    
+                    var urlData = "&date_available=" + date_available;
+                    var urlThis = window.location.href;
+                    $.ajax({
+                        type: "POST",
+                        url: urlThis,
+                        async: true,
+                        data: urlData,
+                        error: function(xhr, statusText) {
+                            console.log('error');
+                        },
+                        success: function(data) {
+                            console.log('success');
+                        },
+                        beforeSend: function() {
+                            console.log('beforeSend');
+                        },
+                        complete: function() {
+                            console.log('complete');
+                        }
+                    });
+                });
             });
             </script>
-
             <!-- body plugin -->
             <div class="wrap timetrader">
                 <div id="calendar"></div>
 
                 <form id="reservation">
-                    <input type="hidden" class='date_available' name='date_available'>
 
+                    <input type="hidden" class='date_available' name='date_available' id='date_available'>
                     <?php
                     $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
                     foreach ($time_available as $key => $value) {
                         echo '<input class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label class="label_time_available" for="' . $value->id . '">' . $value->time_available . '</label></br>';
                     }
                     ?>
-
                     <input type="submit">
 
                 </form>
+
             </div>
 
             <?php
-
-            // $wpdb->insert( $table_name, array(
-            //     'time' => current_time( 'mysql' ),
-            //     'name' => $welcome_name,
-            //     'text' => $welcome_text,
-            //     )
-            // );
-
-        }
-
-        private function set_reservation() {
-        
-            // global $wpdb;
-
-            // $array = array();
-            // $array['nome'] = $dados['nome'];
-            // $array['email'] = $dados['email'];
-
-            // $format = array(); // possiveis formatos %s (string), %d (decimal) e %f (float).
-            // $format['nome'] = '%s';
-            // $format['email'] = '%s';
-
-            // $wpdb->insert( 'newsletter', $array , $format);
-            // // tabela, dados, formato.
-
-            // $wpdb->insert( 'ad_timetrader_date_available', array('date_available' => $date_available));
 
         }
 
