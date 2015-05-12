@@ -876,9 +876,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         //limpar selecionado
                         $('.fc-day').css('background-color', '');
                         //console data: ano / mes / dia
-                        console.log('Clicked on: ' + date.format());
+                        // console.log('Clicked on: ' + date.format());
                         //trocar a cor do selecionado
                         $(this).css('background-color', '#b1c903');
+                        $('#reservation .date_available').attr('value', date.format());
                     },
                     loading: function(bool) {
                         // funcao de loading para caregar
@@ -891,7 +892,8 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             <!-- body plugin -->
             <div class="wrap timetrader">
                 <div id="calendar"></div>
-                <form>
+                <form id="reservation"> 
+                    <input type="hidden" class="date_available">
 
                     <?php
                     $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
@@ -904,6 +906,12 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             </div>
 
             <?php
+            // $wpdb->insert( $table_name, array(
+            //  'time' => current_time( 'mysql' ),
+            //  'name' => $welcome_name,
+            //  'text' => $welcome_text,
+            //  )
+            // );
         }
 
 
@@ -914,36 +922,36 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             global $pagenow;
             // Only run in post/page creation and edit screens
             if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) ) {
-            $sliders = $this->all_meta_sliders( 'title' );
-            ?>
-            <script type="text/javascript">
-            jQuery(document).ready(function() {
-            jQuery('#inserttimetrader').on('click', function() {
-            var id = jQuery('#timetrader-select option:selected').val();
-            window.send_to_editor('[timetrader id=' + id + ']');
-            tb_remove();
-            })
-            });
-            </script>
-            <div id="choose-meta-slider" style="display: none;">
-            <div class="wrap">
-            <?php
-            if ( count( $sliders ) ) {
-            echo "<h3 style='margin-bottom: 20px;'>" . __( "Insert Time Trader", "timetrader" ) . "</h3>";
-            echo "<select id='timetrader-select'>";
-            echo "<option disabled=disabled>" . __( "Choose slideshow", "timetrader" ) . "</option>";
-            foreach ( $sliders as $slider ) {
-            echo "<option value='{$slider['id']}'>{$slider['title']}</option>";
-            }
-            echo "</select>";
-            echo "<button class='button primary' id='inserttimetrader'>" . __( "Insert slideshow", "timetrader" ) . "</button>";
-            } else {
-            _e( "No slideshows found", "timetrader" );
-            }
-            ?>
-            </div>
-            </div>
-            <?php
+                $sliders = $this->all_meta_sliders( 'title' );
+                ?>
+                <script type="text/javascript">
+                jQuery(document).ready(function() {
+                    jQuery('#inserttimetrader').on('click', function() {
+                        var id = jQuery('#timetrader-select option:selected').val();
+                        window.send_to_editor('[timetrader id=' + id + ']');
+                        tb_remove();
+                    })
+                });
+                </script>
+                <div id="choose-meta-slider" style="display: none;">
+                    <div class="wrap">
+                        <?php
+                        if ( count( $sliders ) ) {
+                            echo "<h3 style='margin-bottom: 20px;'>" . __( "Insert Time Trader", "timetrader" ) . "</h3>";
+                            echo "<select id='timetrader-select'>";
+                            echo "<option disabled=disabled>" . __( "Choose slideshow", "timetrader" ) . "</option>";
+                            foreach ( $sliders as $slider ) {
+                                echo "<option value='{$slider['id']}'>{$slider['title']}</option>";
+                            }
+                            echo "</select>";
+                            echo "<button class='button primary' id='inserttimetrader'>" . __( "Insert slideshow", "timetrader" ) . "</button>";
+                        } else {
+                            _e( "No slideshows found", "timetrader" );
+                        }
+                        ?>
+                    </div>
+                </div>
+                <?php
             }
         }
 
