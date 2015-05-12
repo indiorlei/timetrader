@@ -377,3 +377,7 @@ display:inline-block;vertical-align:top;}
 /* resizer */
 .fc-time-grid-event .fc-resizer{left:0;right:0;bottom:0;height:8px;overflow:hidden;line-height:8px;font-size:11px;font-family:monospace;text-align:center;cursor:s-resize;}
 .fc-time-grid-event .fc-resizer:after{content:"=";}
+
+/*outras alteracoes*/
+.time_available{}
+.label_time_available{}

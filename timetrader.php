@@ -87,7 +87,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * Hook Time Trader into WordPress
         */
         private function setup_actions() {
-
             add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9554 );
 
             add_action( 'init', array( $this, 'register_post_type' ) );
@@ -103,11 +102,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             add_action( 'admin_post_timetrader_delete_slider', array( $this, 'delete_slider' ) );
             add_action( 'admin_post_timetrader_create_slider', array( $this, 'create_slider' ) );
             add_action( 'admin_post_timetrader_update_slider', array( $this, 'update_slider' ) );
-            
+
             if ( defined( 'TIMETRADER_ENABLE_RESOURCE_MANAGER' ) && TIMETRADER_ENABLE_RESOURCE_MANAGER === true ) {
                 add_action( 'template_redirect', array( $this, 'start_resource_manager'), 0 );
             }
-
         }
 
         /**
@@ -124,7 +122,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function register_timetrader_widget() {
             // register_widget( 'TimeTrader_Widget' );
         }
-
 
         /**
         * Register ML Slider post type
@@ -866,6 +863,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         */
         public function render_admin_page() {
             // code php of admin page
+
             ?>
 
             <script type='text/javascript'>
@@ -889,13 +887,14 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             <!-- body plugin -->
             <div class="wrap timetrader">
                 <div id="calendar"></div>
-                <form id="reservation" >
-                    <input type="hidden" class="date_available">
+
+                <form id="reservation">
+                    <input type="hidden" class='date_available' name='date_available'>
 
                     <?php
                     $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
                     foreach ($time_available as $key => $value) {
-                        echo '<input class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label for="' . $value->id . '">' . $value->time_available . '</label><br>';
+                        echo '<input class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label class="label_time_available" for="' . $value->id . '">' . $value->time_available . '</label></br>';
                     }
                     ?>
 
@@ -907,15 +906,32 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             <?php
 
             // $wpdb->insert( $table_name, array(
-            //  'time' => current_time( 'mysql' ),
-            //  'name' => $welcome_name,
-            //  'text' => $welcome_text,
-            //  )
+            //     'time' => current_time( 'mysql' ),
+            //     'name' => $welcome_name,
+            //     'text' => $welcome_text,
+            //     )
             // );
 
         }
 
-        private function set_reservation(){}
+        private function set_reservation() {
+        
+            // global $wpdb;
+
+            // $array = array();
+            // $array['nome'] = $dados['nome'];
+            // $array['email'] = $dados['email'];
+
+            // $format = array(); // possiveis formatos %s (string), %d (decimal) e %f (float).
+            // $format['nome'] = '%s';
+            // $format['email'] = '%s';
+
+            // $wpdb->insert( 'newsletter', $array , $format);
+            // // tabela, dados, formato.
+
+            // $wpdb->insert( 'ad_timetrader_date_available', array('date_available' => $date_available));
+
+        }
 
 
         /**
