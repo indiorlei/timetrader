@@ -876,13 +876,13 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         )
                     );
                 }
-
                 insert_values( $date_available );
             }
             ?>
             <script type='text/javascript'>
             // code javascript
             $(document).ready(function() {
+                
                 $('#calendar').fullCalendar({
                     dayClick: function(date) {
                         $('.fc-day').css('background-color', '');
@@ -921,6 +921,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         }
                     });
                 });
+
             });
             </script>
             <!-- body plugin -->
@@ -928,7 +929,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 <div id="calendar"></div>
 
                 <form id="reservation">
-
                     <input type="hidden" class='date_available' name='date_available' id='date_available'>
                     <?php
                     $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
@@ -937,13 +937,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     }
                     ?>
                     <input type="submit">
-
                 </form>
 
             </div>
-
             <?php
-
         }
 
 
