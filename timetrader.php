@@ -868,7 +868,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
                 $date_available = $_POST['date_available'];
 
-                function insert( $date_available ) {
+                function insert_values( $date_available ) {
                     global $wpdb;
                     $table_date_available = $wpdb->prefix . 'timetrader_date_available';
                     $wpdb->insert( $table_date_available, array(
@@ -877,7 +877,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     );
                 }
 
-                insert( $date_available );
+                insert_values( $date_available );
             }
             ?>
             <script type='text/javascript'>
