@@ -116,8 +116,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         private function setup_filters() {
             add_filter( 'media_upload_tabs', array( $this, 'custom_media_upload_tab_name' ), 998 );
             add_filter( 'media_view_strings', array( $this, 'custom_media_uploader_tabs' ), 5 );
-            add_filter( 'media_buttons_context', array( $this, 'insert_timetrader_button' ) );
-
         }
 
         /**
@@ -863,7 +861,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
 
 
-
         /**
         * Render the admin page
         */
@@ -896,40 +893,18 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 <div id="calendar"></div>
                 <form>
 
-
-                <?php
-                $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
-                foreach ($time_available as $key => $value) {
-                    echo '<input id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"> <label for="' . $value->id . '">' . $value->time_available . '</label><br>';
-                }
-                ?>
+                    <?php
+                    $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
+                    foreach ($time_available as $key => $value) {
+                        echo '<input id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label for="' . $value->id . '">' . $value->time_available . '</label><br>';
+                    }
+                    ?>
 
                 </form>
             </div>
 
             <?php
         }
-
-
-        /**
-        * Append the 'Add Slider' button to selected admin pages
-        */
-        public function insert_timetrader_button( $context ) {
-            $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-            if ( ! current_user_can( $capability ) ) {
-                return $context;
-            }
-            global $pagenow;
-            if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) ) {
-                $context .= '<a href="#TB_inline?&inlineId=choose-meta-slider" class="thickbox button" title="' .
-                __( "Select slideshow to insert into post", "timetrader" ) .
-                '"><span class="wp-media-buttons-icon" style="background: url(' . TIMETRADER_ASSETS_URL .
-                    '/timetrader/logo.png); background-repeat: no-repeat; background-position: left bottom;"></span> ' .
-        __( "Add slider", "timetrader" ) . '</a>';
-        }
-        return $context;
-        }
-
 
 
         /**
