@@ -902,16 +902,20 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     }
                     ?>
 
+                    <input type="submit">
+
                 </form>
             </div>
 
             <?php
+
             // $wpdb->insert( $table_name, array(
             //  'time' => current_time( 'mysql' ),
             //  'name' => $welcome_name,
             //  'text' => $welcome_text,
             //  )
             // );
+
         }
 
 
