@@ -873,32 +873,29 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             $(document).ready(function() {
                 $('#calendar').fullCalendar({
                     dayClick: function(date) {
-                        //limpar selecionado
                         $('.fc-day').css('background-color', '');
-                        //console data: ano / mes / dia
-                        // console.log('Clicked on: ' + date.format());
-                        //trocar a cor do selecionado
                         $(this).css('background-color', '#b1c903');
                         $('#reservation .date_available').attr('value', date.format());
                     },
                     loading: function(bool) {
                         // funcao de loading para caregar
-                        $('#loading').toggle(bool);
+                        // $('#loading').toggle(bool);
                     }
                 });
+
             });
             </script>
 
             <!-- body plugin -->
             <div class="wrap timetrader">
                 <div id="calendar"></div>
-                <form id="reservation"> 
+                <form id="reservation" >
                     <input type="hidden" class="date_available">
 
                     <?php
                     $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
                     foreach ($time_available as $key => $value) {
-                        echo '<input id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label for="' . $value->id . '">' . $value->time_available . '</label><br>';
+                        echo '<input class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label for="' . $value->id . '">' . $value->time_available . '</label><br>';
                     }
                     ?>
 
@@ -917,6 +914,8 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             // );
 
         }
+
+        private function set_reservation(){}
 
 
         /**
