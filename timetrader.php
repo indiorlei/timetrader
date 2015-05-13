@@ -13,16 +13,19 @@ License: GPLv2
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // disable direct access
 }
+
 if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
     class TimeTraderPlugin {
         public $version = '0.1';
         public $slider = null;
 
+        
         public static function init() {
             $timetrader = new self();
         }
 
+        
         public function __construct() {
             $this->define_constants();
             $this->includes();
@@ -30,6 +33,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             $this->create_tables();
         }
 
+        
         private function define_constants() {
             define( 'TIMETRADER_VERSION',    $this->version );
             define( 'TIMETRADER_BASE_URL',   trailingslashit( plugins_url( 'timetrader' ) ) );
@@ -37,6 +41,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             define( 'TIMETRADER_PATH',       plugin_dir_path( __FILE__ ) );
         }
 
+        
         private function plugin_classes() {
             return array(
                 'timetradersystemcheck'  => TIMETRADER_PATH . 'includes/timetrader.systemcheck.class.php',
@@ -44,6 +49,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 );
         }
 
+        
         private function includes() {
             $autoload_is_disabled = defined( 'TIMETRADER_AUTOLOAD_CLASSES' ) && TIMETRADER_AUTOLOAD_CLASSES === false;
             if ( function_exists( "spl_autoload_register" ) && ! ( $autoload_is_disabled ) ) {
@@ -62,34 +68,33 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             }
         }
 
+
         /**
         * Autoload Timetrader classes to reduce memory consumption
         */
         public function autoload( $class ) {
             $classes = $this->plugin_classes();
             $class_name = strtolower( $class );
-            
             if ( isset( $classes[$class_name] ) && is_readable( $classes[$class_name] ) ) {
                 require_once( $classes[$class_name] );
             }
         }
+
 
         /**
         * Hook Time Trader into WordPress
         */
         private function setup_actions() {
             add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9554 );
-
             add_action( 'init', array( $this, 'register_post_type' ) );
             add_action( 'init', array( $this, 'register_taxonomy' ) );
             add_action( 'admin_footer', array( $this, 'admin_footer' ), 11 );
-
             add_action( 'widgets_init', array( $this, 'register_timetrader_widget' ) );
-
             if ( defined( 'TIMETRADER_ENABLE_RESOURCE_MANAGER' ) && TIMETRADER_ENABLE_RESOURCE_MANAGER === true ) {
                 add_action( 'template_redirect', array( $this, 'start_resource_manager'), 0 );
             }
         }
+
 
         /**
         * Register Time Trader widget
@@ -97,6 +102,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function register_timetrader_widget() {
             // register_widget( 'TimeTrader_Widget' );
         }
+
 
         /**
         * Register ML Slider post type
@@ -117,6 +123,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             );
         }
 
+
         /**
         * Register taxonomy to store slider => slides relationship
         */
@@ -130,26 +137,24 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             );
         }
 
+
         /**
         * Add the menu page
         */
         public function register_admin_menu() {
-
             global $user_ID;
-            
             $title = apply_filters( 'timetrader_menu_title', 'Time Trader' );
             $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-
             $page = add_menu_page( $title, $title, $capability, 'timetrader', array( $this, 'render_admin_page' ), TIMETRADER_ASSETS_URL . 'timetrader/logo.png' );
-
             // ensure our JavaScript is only loaded on the Time Trader admin page
             add_action( 'admin_print_scripts-' . $page, array( $this, 'register_admin_scripts' ) );
             add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
             add_action( 'load-' . $page, array( $this, 'help_tab' ) );
         }
 
+
         /**
-        * Rehister admin styles
+        * Register admin styles
         */
         public function register_admin_styles() {
             wp_enqueue_style( 'timetrader-fullcalendar-styles', TIMETRADER_ASSETS_URL . 'calendar/css/fullcalendar.css', false, TIMETRADER_VERSION );
@@ -173,6 +178,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             do_action( 'timetrader_register_admin_scripts' );
         }
 
+
         /**
         * Localise admin script
         */
@@ -193,6 +199,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             );
         }
 
+
         /**
         * Check our WordPress installation is compatible with Time Trader
         */
@@ -200,6 +207,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             $systemCheck = new TimeTraderSystemCheck();
             $systemCheck->check();
         }
+
 
         /**
         * Return the users saved view preference.
@@ -212,17 +220,17 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             return 'tabs';
         }
 
+
         /**
         * Render the admin page
         */
         public function render_admin_page() {
             global $wpdb;
             // code php of admin page
-
             if( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
                 require_once( ABSPATH . 'wp-load.php' );
+                
                 $date_available = $_POST['date_available'];
-
                 $time_available_str = $_POST['time_available'];
                 $time_available = explode( '|', $time_available_str );
 
@@ -232,7 +240,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             <script type='text/javascript'>
             // code javascript
             jQuery(document).ready(function() {
-                
                 jQuery('#calendar').fullCalendar({
                     dayClick: function(date) {
                         jQuery('.fc-day').css('background-color', '');
@@ -244,12 +251,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         // jQuery('#loading').toggle(bool);
                     }
                 });
-
                 jQuery('#reservation').bind('submit', function(event) {
                     event.preventDefault();
                     
                     var date_available = jQuery('#date_available').val();
-                    
                     var time_available = '';
                     jQuery(':checkbox').each(function () {
                         var ischecked = jQuery(this).is(':checked');
@@ -282,7 +287,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         }
                     });
                 });
-
             });
             </script>
             <!-- body plugin -->
@@ -304,6 +308,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             </div>
             <?php
         }
+
 
         /**
         * Insert values
@@ -366,6 +371,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
         }
 
+
         /**
         * Append the 'Choose Time Trader' thickbox content to the bottom of selected admin pages
         */
@@ -406,6 +412,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             }
         }
 
+
         /**
         * Start output buffering.
         *
@@ -416,6 +423,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             ob_start( array( $this, 'resource_manager' ) );
         }
 
+
         /**
         * Process the whole page output. Move link tags with an ID starting
         * with 'timetrader' into the <head> of the page.
@@ -423,17 +431,14 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function resource_manager( $buffer ) {
             // create dom document from buffer
             $html = new simple_html_dom();
-
             // Load from a string
             $html->load( $buffer, true, false );
-
             if ( ! $html->find( 'body link[id^="timetrader"]' ) )
                 return $buffer;
                 // selectors to find Time Trader links
             $selectors = array( 
                 'body link[id^="timetrader"]',
                 );
-
             $selectors = apply_filters( "timetrader_resource_manager_selectors", $selectors );
             if ( $head = $html->find( 'head', 0 ) ) {
                 // move Time Trader elemends to <head>
@@ -444,10 +449,13 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     }
                 }
             }
-
             return $html->save();
         }
 
+
+        /**
+        * Create Tables
+        */
         private function create_tables() {
             global $wpdb;
 
@@ -507,6 +515,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             // );
         }
 
+
         /**
         * Add the help tab to the screen.
         */
@@ -524,5 +533,4 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
     }
 
 endif;
-
 add_action( 'plugins_loaded', array( 'TimeTraderPlugin', 'init' ), 10 );
