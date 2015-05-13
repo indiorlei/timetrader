@@ -864,14 +864,24 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function render_admin_page() {
             global $wpdb;
             // code php of admin page
+
             if( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
                 require_once( ABSPATH . 'wp-load.php' );
                 $date_available = $_POST['date_available'];
 
-                function insert_values( $date_available ) {
+                $time_available_str = $_POST['time_available'];
+                $time_available = explode( '|', $time_available_str );
+
+                function insert_values( $date_available, $time_available ) {
                     global $wpdb;
-                    
-                    $table_date_available = $wpdb->prefix . 'timetrader_date_available';
+
+                    $table_date_available           = $wpdb->prefix . 'timetrader_date_available';
+                    $timetrader_time_available      = $wpdb->prefix . 'timetrader_time_available';
+
+                    $timetrader_reservation         = $wpdb->prefix . 'timetrader_reservation';
+                    $timetrader_reservation_info    = $wpdb->prefix . 'timetrader_reservation_info';
+
+                    $timetrader_status              = $wpdb->prefix . 'timetrader_status';
 
                     $has_date = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
 
@@ -882,8 +892,22 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                             'date_available' => $date_available
                             )
                         );
+
+                        $date_available_insert = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
+                        foreach ($date_available_insert as $key => $date) { $date_available_id = $date->id; }
+
+                        foreach ($time_available as $value) {
+                            $wpdb->insert( $timetrader_reservation_info, array(
+                                'date_available_id' => $date_available_id,
+                                'time_available_id' => $value
+                                )
+                            );
+                        }
+
+
                     } else {
                         //update
+                        foreach ($has_date as $key => $date) { $id_date = $date->id; }
 
                         // how to
                         // $wpdb->update( $table, $data, $where, $format = null, $where_format = null );
@@ -905,7 +929,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     }
 
                 }
-                insert_values( $date_available );
+                insert_values( $date_available, $time_available );
             }
             ?>
             <script type='text/javascript'>
@@ -929,7 +953,14 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     
                     var date_available = jQuery('#date_available').val();
                     
-                    var urlData = "&date_available=" + date_available;
+                    var time_available = '';
+                    jQuery(':checkbox').each(function () {
+                        var ischecked = jQuery(this).is(':checked');
+                        if ( ischecked ) { time_available += jQuery(this).val() + '|'; }
+                    });
+
+                    var urlData = "&date_available=" + date_available + "&time_available=" + time_available;
+
                     var urlThis = window.location.href;
                     jQuery.ajax({
                         type: "POST",
