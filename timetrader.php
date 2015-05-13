@@ -27,9 +27,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             $this->define_constants();
             $this->includes();
             $this->setup_actions();
-            $this->setup_filters();
-            $this->setup_shortcode();
-            $this->register_slide_types();
             $this->create_tables();
         }
 
@@ -77,12 +74,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             }
         }
 
-        private function setup_shortcode() {
-            // add_shortcode( 'timetrader', array( $this, 'register_shortcode' ) );
-            // add_shortcode( 'timetrader', array( $this, 'register_shortcode' ) );
-        }
-
-
         /**
         * Hook Time Trader into WordPress
         */
@@ -91,29 +82,13 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
             add_action( 'init', array( $this, 'register_post_type' ) );
             add_action( 'init', array( $this, 'register_taxonomy' ) );
-            add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
             add_action( 'admin_footer', array( $this, 'admin_footer' ), 11 );
 
             add_action( 'widgets_init', array( $this, 'register_timetrader_widget' ) );
-            
-            add_action( 'admin_post_timetrader_preview', array( $this, 'do_preview' ) );
-            add_action( 'admin_post_timetrader_switch_view', array( $this, 'switch_view' ) );
-            add_action( 'admin_post_timetrader_delete_slide', array( $this, 'delete_slide' ) );
-            add_action( 'admin_post_timetrader_delete_slider', array( $this, 'delete_slider' ) );
-            add_action( 'admin_post_timetrader_create_slider', array( $this, 'create_slider' ) );
-            add_action( 'admin_post_timetrader_update_slider', array( $this, 'update_slider' ) );
 
             if ( defined( 'TIMETRADER_ENABLE_RESOURCE_MANAGER' ) && TIMETRADER_ENABLE_RESOURCE_MANAGER === true ) {
                 add_action( 'template_redirect', array( $this, 'start_resource_manager'), 0 );
             }
-        }
-
-        /**
-        * Hook Time Trader into WordPress
-        */
-        private function setup_filters() {
-            add_filter( 'media_upload_tabs', array( $this, 'custom_media_upload_tab_name' ), 998 );
-            add_filter( 'media_view_strings', array( $this, 'custom_media_uploader_tabs' ), 5 );
         }
 
         /**
@@ -142,7 +117,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             );
         }
 
-
         /**
         * Register taxonomy to store slider => slides relationship
         */
@@ -155,15 +129,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 )
             );
         }
-
-
-        /**
-        * Register our slide types
-        */
-        private function register_slide_types() {
-            // $image = new MetaImageSlide();
-        }
-
 
         /**
         * Add the menu page
@@ -181,71 +146,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             add_action( 'admin_print_scripts-' . $page, array( $this, 'register_admin_scripts' ) );
             add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
             add_action( 'load-' . $page, array( $this, 'help_tab' ) );
-        }
-
-
-        /**
-        * Shortcode used to display slideshow
-        *
-        * @return string HTML output of the shortcode
-        */
-        public function register_shortcode( $atts ) {
-        
-            extract( shortcode_atts( array(
-                'id' => false,
-                'restrict_to' => false
-                ), $atts, 'timetrader' ) );
-            
-            if ( ! $id ) {
-                return false;
-            }
-
-            // handle [timetrader id=123 restrict_to=home]
-            if ($restrict_to && $restrict_to == 'home' && ! is_front_page()) {
-                return;
-            }
-
-            if ($restrict_to && $restrict_to != 'home' && ! is_page( $restrict_to ) ) {
-                return;
-            }
-
-            // we have an ID to work with
-            $slider = get_post( $id );
-            // check the slider is published and the ID is correct
-
-            if ( ! $slider || $slider->post_status != 'publish' || $slider->post_type != 'timetrader' ) {
-                return "<!-- Time Trader {$atts['id']} not found -->";
-            }
-
-            // lets go
-            $this->set_slider( $id, $atts );
-            $this->slider->enqueue_scripts();
-            return $this->slider->render_public_slides();
-        
-        }
-
-
-        /**
-        * Initialise translations
-        */
-        public function load_plugin_textdomain() {
-            load_plugin_textdomain( 'timetrader', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-        }
-
-
-        /**
-        * Add the help tab to the screen.
-        */
-        public function help_tab() {
-            $screen = get_current_screen();
-            
-            // documentation tab
-            $screen->add_help_tab( array(
-                'id'    => 'documentation',
-                'title' => __( 'Documentation', 'timetrader' ),
-                'content'   => "<p><a href='http://www.timetrader.com/documentation/' target='blank'>Time Trader Documentation</a></p>",
-                )
-            );
         }
 
         /**
@@ -273,7 +173,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             do_action( 'timetrader_register_admin_scripts' );
         }
 
-
         /**
         * Localise admin script
         */
@@ -294,555 +193,12 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             );
         }
 
-
-        /**
-        * Outputs a blank page containing a slideshow preview (for use in the 'Preview' iFrame)
-        */
-        public function do_preview() {
-            remove_action('wp_footer', 'wp_admin_bar_render', 1000);
-            
-            if ( isset( $_GET['slider_id'] ) && absint( $_GET['slider_id'] ) > 0 ) {
-                $id = absint( $_GET['slider_id'] );
-                ?>
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style type='text/css'>body, html {overflow:hidden;margin:0;padding:0;}</style>
-                    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-                    <meta http-equiv="Pragma" content="no-cache" />
-                    <meta http-equiv="Expires" content="0" />
-                </head>
-                <body>
-                    <?php echo do_shortcode("[timetrader id={$id}]"); ?>
-                    <?php wp_footer(); ?>
-                </body>
-                </html>
-                <?php
-            }
-            die();
-        }
-
-
         /**
         * Check our WordPress installation is compatible with Time Trader
         */
         public function do_system_check() {
             $systemCheck = new TimeTraderSystemCheck();
             $systemCheck->check();
-        }
-
-
-        /**
-        * Update the tab options in the media manager
-        */
-        public function custom_media_uploader_tabs( $strings ) {
-            
-            //update strings
-
-            if ( ( isset( $_GET['page'] ) && $_GET['page'] == 'timetrader' ) ) {
-                $strings['insertMediaTitle'] = __( "Image", "timetrader" );
-                $strings['insertIntoPost'] = __( "Add to slider", "timetrader" );
-
-                // remove options
-                $strings_to_remove = array(
-                    'createVideoPlaylistTitle',
-                    'createGalleryTitle',
-                    'insertFromUrlTitle',
-                    'createPlaylistTitle'
-                    );
-                foreach ($strings_to_remove as $string) {
-                    if (isset($strings[$string])) {
-                        unset($strings[$string]);
-                    }
-                }
-            }
-
-            return $strings;
-        }
-
-
-        /**
-        * Add extra tabs to the default wordpress Media Manager iframe
-        *
-        * @var array existing media manager tabs
-        */
-        public function custom_media_upload_tab_name( $tabs ) {
-            // restrict our tab changes to the Time Trader plugin page
-            if ( isset( $_GET['page'] ) && $_GET['page'] == 'timetrader' ) {
-                if ( isset( $tabs['nextgen'] ) ) {
-                    unset( $tabs['nextgen'] );
-                }
-            }
-
-            return $tabs;
-        }
-
-
-        /**
-        * Set the current slider
-        */
-        public function set_slider( $id, $shortcode_settings = array() ) {
-            
-            $type = 'flex';
-            
-            if ( isset( $shortcode_settings['type'] ) ) {
-                $type = $shortcode_settings['type'];
-            } else if ( $settings = get_post_meta( $id, 'timetrader_settings', true ) ) {
-                if ( is_array( $settings ) && isset( $settings['type'] ) ) {
-                    $type = $settings['type'];
-                }
-            }
-
-            if ( ! in_array( $type, array( 'flex', 'coin', 'nivo', 'responsive' ) ) ) {
-                $type = 'flex';
-            }
-
-            $this->slider = $this->load_slider( $type, $id, $shortcode_settings );
-        }
-
-
-        /**
-        * Create a new slider based on the sliders type setting
-        */
-        private function load_slider( $type, $id, $shortcode_settings ) {
-            
-            // switch ( $type ) {
-            //     case( 'coin' ): return new MetaCoinSlider( $id, $shortcode_settings );
-            //     case( 'flex' ): return new MetaFlexSlider( $id, $shortcode_settings );
-            //     case( 'nivo' ): return new MetaNivoSlider( $id, $shortcode_settings );
-            //     case( 'responsive' ): return new MetaResponsiveSlider( $id, $shortcode_settings );
-            //     default: return new MetaFlexSlider( $id, $shortcode_settings );
-            // }
-
-        }
-
-
-        /**
-        *
-        */
-        public function update_slider() {
-            // check_admin_referer( "timetrader_update_slider" );
-            // $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-            // if ( ! current_user_can( $capability ) ) {
-            // return;
-            // }
-            // $slider_id = absint( $_POST['slider_id'] );
-            // if ( ! $slider_id ) {
-            // return;
-            // }
-            // // update settings
-            // if ( isset( $_POST['settings'] ) ) {
-            // $new_settings = $_POST['settings'];
-            // $old_settings = get_post_meta( $slider_id, 'timetrader_settings', true );
-            // // convert submitted checkbox values from 'on' or 'off' to boolean values
-            // $checkboxes = apply_filters( "timetrader_checkbox_settings", array( 'noConflict', 'fullWidth', 'hoverPause', 'links', 'reverse', 'random', 'printCss', 'printJs', 'smoothHeight', 'center', 'carouselMode', 'autoPlay' ) );
-            // foreach ( $checkboxes as $checkbox ) {
-            // if ( isset( $new_settings[$checkbox] ) && $new_settings[$checkbox] == 'on' ) {
-            // $new_settings[$checkbox] = "true";
-            // } else {
-            // $new_settings[$checkbox] = "false";
-            // }
-            // }
-            // $settings = array_merge( (array)$old_settings, $new_settings );
-            // // update the slider settings
-            // update_post_meta( $slider_id, 'timetrader_settings', $settings );
-            // }
-            // // update slideshow title
-            // if ( isset( $_POST['title'] ) ) {
-            // $slide = array(
-            // 'ID' => $slider_id,
-            // 'post_title' => esc_html( $_POST['title'] )
-            // );
-            // wp_update_post( $slide );
-            // }
-            // // update individual slides
-            // if ( isset( $_POST['attachment'] ) ) {
-            // foreach ( $_POST['attachment'] as $slide_id => $fields ) {
-            // do_action( "timetrader_save_{$fields['type']}_slide", $slide_id, $slider_id, $fields );
-            // }
-            // }
-        }
-
-
-        /**
-        * Delete a slide. This doesn't actually remove the slide from WordPress, simply untags
-        * it from the slide taxonomy.
-        */
-        public function delete_slide() {
-            // // check nonce
-            // check_admin_referer( "timetrader_delete_slide" );
-            // $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-            // if ( ! current_user_can( $capability ) ) {
-            // return;
-            // }
-            // $slide_id = absint( $_GET['slide_id'] );
-            // $slider_id = absint( $_GET['slider_id'] );
-            // // Get the existing terms and only keep the ones we don't want removed
-            // $new_terms = array();
-            // $current_terms = wp_get_object_terms( $slide_id, 'timetrader', array( 'fields' => 'ids' ) );
-            // $term = get_term_by( 'name', $slider_id, 'timetrader' );
-            // foreach ( $current_terms as $current_term ) {
-            // if ( $current_term != $term->term_id ) {
-            // $new_terms[] = absint( $current_term );
-            // }
-            // }
-            // wp_set_object_terms( $slide_id, $new_terms, 'timetrader' );
-            // wp_redirect( admin_url( "admin.php?page=timetrader&id={$slider_id}" ) );
-        }
-
-
-        /**
-        * Delete a slider (send it to trash)
-        */
-        public function delete_slider() {
-            // // check nonce
-            // check_admin_referer( "timetrader_delete_slider" );
-            // $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-            // if ( ! current_user_can( $capability ) ) {
-            // return;
-            // }
-            // $slider_id = absint( $_GET['slider_id'] );
-            // // send the post to trash
-            // $id = wp_update_post( array(
-            // 'ID' => $slider_id,
-            // 'post_status' => 'trash'
-            // )
-            // );
-            // $slider_id = $this->find_slider( 'modified', 'DESC' );
-            // wp_redirect( admin_url( "admin.php?page=timetrader&id={$slider_id}" ) );
-        }
-
-
-        /**
-        *
-        */
-        public function switch_view() {
-
-            global $user_ID;
-
-            $view = $_GET['view'];
-            $allowed_views = array('tabs', 'dropdown');
-
-            if ( ! in_array( $view, $allowed_views ) ) {
-                return;
-            }
-
-            delete_user_meta( $user_ID, "timetrader_view" );
-
-            if ( $view == 'dropdown' ) {
-                add_user_meta( $user_ID, "timetrader_view", "dropdown");
-            }
-
-            wp_redirect( admin_url( "admin.php?page=timetrader" ) );
-        }
-
-
-        /**
-        * Create a new slider
-        */
-        public function create_slider() {
-            // check nonce
-            check_admin_referer( "timetrader_create_slider" );
-            $capability = apply_filters( 'timetrader_capability', 'edit_others_posts' );
-            if ( ! current_user_can( $capability ) ) {
-                return;
-            }
-            $defaults = array();
-            
-            // if possible, take a copy of the last edited slider settings in place of default settings
-            if ( $last_modified = $this->find_slider( 'modified', 'DESC' ) ) {
-                $defaults = get_post_meta( $last_modified, 'timetrader_settings', true );
-            }
-
-            // insert the post
-            $id = wp_insert_post( array(
-                'post_title' => __( "New Slider", "timetrader" ),
-                'post_status' => 'publish',
-                'post_type' => 'timetrader'
-                )
-            );
-
-            // use the default settings if we can't find anything more suitable.
-            if ( empty( $defaults ) ) {
-                $slider = new timetrader( $id, array() );
-                $defaults = $slider->get_default_parameters();
-            }
-
-            // insert the post meta
-            add_post_meta( $id, 'timetrader_settings', $defaults, true );
-
-            // create the taxonomy term, the term is the ID of the slider itself
-            wp_insert_term( $id, 'timetrader' );
-            wp_redirect( admin_url( "admin.php?page=timetrader&id={$id}" ) );
-        }
-
-
-        /**
-        * Find a single slider ID. For example, last edited, or first published.
-        *
-        * @param string $orderby field to order.
-        * @param string $order direction (ASC or DESC).
-        * @return int slider ID.
-        */
-        private function find_slider( $orderby, $order ) {
-            $args = array(
-                'force_no_custom_order' => true,
-                'post_type' => 'timetrader',
-                'num_posts' => 1,
-                'post_status' => 'publish',
-                'suppress_filters' => 1, // wpml, ignore language filter
-                'orderby' => $orderby,
-                'order' => $order
-                );
-            
-            $the_query = new WP_Query( $args );
-
-            while ( $the_query->have_posts() ) {
-                $the_query->the_post();
-                return $the_query->post->ID;
-            }
-
-            wp_reset_query();
-            return false;
-        }
-
-
-        /**
-        * Get sliders. Returns a nicely formatted array of currently
-        * published sliders.
-        *
-        * @param string $sort_key
-        * @return array all published sliders
-        */
-        public function all_meta_sliders( $sort_key = 'date' ) {
-            $sliders = array();
-            // list the tabs
-            $args = array(
-            'post_type' => 'timetrader',
-            'post_status' => 'publish',
-            'orderby' => $sort_key,
-            'suppress_filters' => 1, // wpml, ignore language filter
-            'order' => 'ASC',
-            'posts_per_page' => -1
-            );
-            $args = apply_filters( 'timetrader_all_meta_sliders_args', $args );
-            // WP_Query causes issues with other plugins using admin_footer to insert scripts
-            // use get_posts instead
-            $all_sliders = get_posts( $args );
-            foreach( $all_sliders as $slideshow ) {
-            $active = $this->slider && ( $this->slider->id == $slideshow->ID ) ? true : false;
-            $sliders[] = array(
-            'active' => $active,
-            'title' => $slideshow->post_title,
-            'id' => $slideshow->ID
-            );
-            } 
-            return $sliders;
-        }
-
-
-        /**
-        * Compare array values
-        *
-        * @param array $elem1
-        * @param array $elem2
-        * @return bool
-        */
-        private function compare_elems( $elem1, $elem2 ) {
-            return $elem1['priority'] > $elem2['priority'];
-        }
-
-
-        /**
-        *
-        * @param array $aFields - array of field to render
-        * @return string
-        */
-        public function build_settings_rows( $aFields ) {
-
-            // order the fields by priority
-            uasort( $aFields, array( $this, "compare_elems" ) );
-            $return = "";
-            // loop through the array and build the settings HTML
-            foreach ( $aFields as $id => $row ) {
-                // checkbox input type
-                if ( $row['type'] == 'checkbox' ) {
-                    $return .= "<tr><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><input class='option {$row['class']} {$id}' type='checkbox' name='settings[{$id}]' {$row['checked']} />";
-                    if ( isset( $row['after'] ) ) {
-                        $return .= "<span class='after'>{$row['after']}</span>";
-                    }
-                    $return .= "</td></tr>";
-                }
-
-                // navigation row
-                if ( $row['type'] == 'navigation' ) {
-                    $navigation_row = "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><ul>";
-                    foreach ( $row['options'] as $k => $v ) {
-                        if ( $row['value'] === true && $k === 'true' ) {
-                            $checked = checked( true, true, false );
-                        } else if ( $row['value'] === false && $k === 'false' ) {
-                            $checked = checked( true, true, false );
-                        } else {
-                            $checked = checked( $k, $row['value'], false );
-                        }
-
-                        $disabled = $k == 'thumbnails' ? 'disabled' : '';
-                        $navigation_row .= "<li><label><input type='radio' name='settings[{$id}]' value='{$k}' {$checked} {$disabled}/>{$v['label']}</label></li>";
-                    }
-                    $navigation_row .= "</ul></td></tr>";
-                    $return .= apply_filters( 'timetrader_navigation_options', $navigation_row, $this->slider );
-                }
-
-                // navigation row
-                if ( $row['type'] == 'radio' ) {
-                    $navigation_row = "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><ul>";
-                    foreach ( $row['options'] as $k => $v ) {
-                        $checked = checked( $k, $row['value'], false );
-                        $class = isset( $v['class'] ) ? $v['class'] : "";
-                        $navigation_row .= "<li><label><input type='radio' name='settings[{$id}]' value='{$k}' {$checked} class='radio {$class}'/>{$v['label']}</label></li>";
-                    }
-
-                    $navigation_row .= "</ul></td></tr>";
-                    $return .= apply_filters( 'timetrader_navigation_options', $navigation_row, $this->slider );
-                }
-
-                // header/divider row
-                if ( $row['type'] == 'divider' ) {
-                    $return .= "<tr class='{$row['type']}'><td colspan='2' class='divider'><b>{$row['value']}</b></td></tr>";
-                }
-
-                // slideshow select row
-                if ( $row['type'] == 'slider-lib' ) {
-                    $return .= "<tr class='{$row['type']}'><td colspan='2' class='slider-lib-row'>";
-                    foreach ( $row['options'] as $k => $v ) {
-                        $checked = checked( $k, $row['value'], false );
-                        $return .= "<input class='select-slider' id='{$k}' rel='{$k}' type='radio' name='settings[type]' value='{$k}' {$checked} />
-                        <label for='{$k}'>{$v['label']}</label>";
-                    }
-
-                    $return .= "</td></tr>";
-                }
-
-                // number input type
-                if ( $row['type'] == 'number' ) {
-                    $return .= "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><input class='option {$row['class']} {$id}' type='number' min='{$row['min']}' max='{$row['max']}' step='{$row['step']}' name='settings[{$id}]' value='" . absint( $row['value'] ) . "' /><span class='after'>{$row['after']}</span></td></tr>";
-                }
-                
-                // select drop down
-                if ( $row['type'] == 'select' ) {
-                    $return .= "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><select class='option {$row['class']} {$id}' name='settings[{$id}]'>";
-                    foreach ( $row['options'] as $k => $v ) {
-                        $selected = selected( $k, $row['value'], false );
-                        $return .= "<option class='{$v['class']}' value='{$k}' {$selected}>{$v['label']}</option>";
-                    }
-                    $return .= "</select></td></tr>";
-                }
-
-                // theme drop down
-                if ( $row['type'] == 'theme' ) {
-                    $return .= "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><select class='option {$row['class']} {$id}' name='settings[{$id}]'>";
-                    $themes = "";
-                    foreach ( $row['options'] as $k => $v ) {
-                        $selected = selected( $k, $row['value'], false );
-                        $themes .= "<option class='{$v['class']}' value='{$k}' {$selected}>{$v['label']}</option>";
-                    }
-                    $return .= apply_filters( 'timetrader_get_available_themes', $themes, $this->slider->get_setting( 'theme' ) );
-                    $return .= "</select></td></tr>";
-                }
-
-                // text input type
-                if ( $row['type'] == 'text' ) {
-                    $return .= "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><input class='option {$row['class']} {$id}' type='text' name='settings[{$id}]' value='" . esc_attr( $row['value'] ) . "' /></td></tr>";
-                }
-
-                // text input type
-                if ( $row['type'] == 'textarea' ) {
-                    $return .= "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\" colspan='2'>{$row['label']}</td></tr><tr><td colspan='2'><textarea class='option {$row['class']} {$id}' name='settings[{$id}]' />{$row['value']}</textarea></td></tr>";
-                }
-
-                // text input type
-                if ( $row['type'] == 'title' ) {
-                    $return .= "<tr class='{$row['type']}'><td class='tipsy-tooltip' title=\"{$row['helptext']}\">{$row['label']}</td><td><input class='option {$row['class']} {$id}' type='text' name='{$id}' value='" . esc_attr( $row['value'] ) . "' /></td></tr>";
-                }
-
-            }
-        
-            return $return;
-        
-        }
-
-
-        /**
-        * Return an indexed array of all easing options
-        *
-        * @return array
-        */
-        private function get_easing_options() {
-            $options = array(
-                'linear', 'swing', 'jswing', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad',
-                'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart',
-                'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint',
-                'easeInOutQuint', 'easeInSine', 'easeOutSine', 'easeInOutSine',
-                'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc',
-                'easeInOutCirc', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic',
-                'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInBounce', 'easeOutBounce',
-                'easeInOutBounce'
-                );
-            foreach ( $options as $option ) {
-                $return[$option] = array(
-                    'label' => ucfirst( preg_replace( '/(\w+)([A-Z])/U', '\\1 \\2', $option ) ),
-                    'class' => ''
-                    );
-            }
-            return $return;
-        }
-
-        /**
-        * Output the slideshow selector.
-        *
-        * Show tabs or a dropdown list depending on the users saved preference.
-        */
-        public function print_slideshow_selector() {
-            global $user_ID;
-            $add_url = wp_nonce_url( admin_url( "admin-post.php?action=timetrader_create_slider" ), "timetrader_create_slider" );
-            if ( $tabs = $this->all_meta_sliders() ) {
-            if ( $this->get_view() == 'tabs' ) {
-            echo "<div style='display: none;' id='screen-options-switch-view-wrap'>
-            <a class='switchview dashicons-before dashicons-randomize tipsy-tooltip' title='" . __("Switch to Dropdown view", "timetrader") . "' href='" . admin_url( "admin-post.php?action=timetrader_switch_view&view=dropdown") . "'>" . __("Dropdown", "timetrader") . "</a></div>";
-            echo "<h3 class='nav-tab-wrapper'>";
-            foreach ( $tabs as $tab ) {
-            if ( $tab['active'] ) {
-            echo "<div class='nav-tab nav-tab-active'><input type='text' name='title'  value='" . esc_attr( $tab['title'] ) . "' onfocus='this.style.width = ((this.value.length + 1) * 9) + \"px\"' /></div>";
-            } else {
-            echo "<a href='?page=timetrader&amp;id={$tab['id']}' class='nav-tab'>" . esc_html( $tab['title'] ) . "</a>";
-            }
-            }
-            echo "<a href='{$add_url}' id='create_new_tab' class='nav-tab'>+</a>";
-            echo "</h3>";
-            } else {
-            if ( isset( $_GET['add'] ) && $_GET['add'] == 'true' ) {
-            echo "<div id='message' class='updated'><p>" . __( "New slideshow created. Click 'Add Slide' to get started!", "timetrader" ) . "</p></div>";
-            }
-            echo "<div style='display: none;' id='screen-options-switch-view-wrap'><a class='switchview dashicons-before dashicons-randomize tipsy-tooltip' title='" . __("Switch to Tab view", "timetrader") . "' href='" . admin_url( "admin-post.php?action=timetrader_switch_view&view=tabs") . "'>" . __("Tabs", "timetrader") . "</a></div>";
-            echo "<div class='dropdown_container'><label for='select-slider'>" . __("Select Slider", "timetrader") . ": </label>";
-            echo "<select name='select-slider' onchange='if (this.value) window.location.href=this.value'>";
-            $tabs = $this->all_meta_sliders( 'title' );
-            foreach ( $tabs as $tab ) {
-            $selected = $tab['active'] ? " selected" : "";
-            if ( $tab['active'] ) {
-            $title = $tab['title'];
-            }
-            echo "<option value='?page=timetrader&amp;id={$tab['id']}'{$selected}>{$tab['title']}</option>";
-            }
-            echo "</select> " . __( 'or', "timetrader" ) . " ";
-            echo "<a href='{$add_url}'>" . __( 'Add New Slideshow', "timetrader" ) . "</a></div>";
-            }
-            } else {
-            echo "<h3 class='nav-tab-wrapper'>";
-            echo "<a href='{$add_url}' id='create_new_tab' class='nav-tab'>+</a>";
-            echo "<div class='bubble'>" . __( "Create your first slideshow", "timetrader" ) . "</div>";
-            echo "</h3>";
-            }
         }
 
         /**
@@ -854,66 +210,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 return get_user_meta( $user_ID, "timetrader_view", true );
             }
             return 'tabs';
-        }
-
-
-
-        function insert_values( $date_available, $time_available ) {
-            global $wpdb;
-
-            $table_date_available           = $wpdb->prefix . 'timetrader_date_available';
-            $timetrader_time_available      = $wpdb->prefix . 'timetrader_time_available';
-
-            $timetrader_reservation         = $wpdb->prefix . 'timetrader_reservation';
-            $timetrader_reservation_info    = $wpdb->prefix . 'timetrader_reservation_info';
-
-            $timetrader_status              = $wpdb->prefix . 'timetrader_status';
-
-            $has_date = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
-
-            // se ja tem uma data faz o update de infos naquela data
-            if ( empty( $has_date ) ) {
-                // insert
-                $wpdb->insert( $table_date_available, array(
-                    'date_available' => $date_available
-                    )
-                );
-
-                $date_available_insert = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
-                foreach ($date_available_insert as $key => $date) { $date_available_id = $date->id; }
-
-                foreach ($time_available as $value) {
-                    $wpdb->insert( $timetrader_reservation_info, array(
-                        'date_available_id' => $date_available_id,
-                        'time_available_id' => $value
-                        )
-                    );
-                }
-
-
-            } else {
-                //update
-                foreach ($has_date as $key => $date) { $id_date = $date->id; }
-
-                // how to
-                // $wpdb->update( $table, $data, $where, $format = null, $where_format = null );
-
-                // $wpdb->update( 
-                //     'table', 
-                //     array( 
-                //     'column1' => 'value1',  // string
-                //     'column2' => 'value2'   // integer (number) 
-                //     ), 
-                //     array( 'ID' => 1 ), 
-                //     array( 
-                //     '%s',   // value1
-                //     '%d'    // value2
-                //     ), 
-                //     array( '%d' ) 
-                //     );
-
-            }
-
         }
 
         /**
@@ -1009,6 +305,66 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             <?php
         }
 
+        /**
+        * Insert values
+        */
+        public function insert_values( $date_available, $time_available ) {
+            global $wpdb;
+
+            $table_date_available           = $wpdb->prefix . 'timetrader_date_available';
+            $timetrader_time_available      = $wpdb->prefix . 'timetrader_time_available';
+
+            $timetrader_reservation         = $wpdb->prefix . 'timetrader_reservation';
+            $timetrader_reservation_info    = $wpdb->prefix . 'timetrader_reservation_info';
+
+            $timetrader_status              = $wpdb->prefix . 'timetrader_status';
+
+            $has_date = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
+
+            // se ja tem uma data faz o update de infos naquela data
+            if ( empty( $has_date ) ) {
+
+                // insert
+                $wpdb->insert( $table_date_available, array(
+                    'date_available' => $date_available
+                    )
+                );
+
+                $date_available_insert = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
+                foreach ( $date_available_insert as $key => $date ) { $date_available_id = $date->id; }
+                foreach ( $time_available as $value ) {
+                    $wpdb->insert( $timetrader_reservation_info, array(
+                        'date_available_id' => $date_available_id,
+                        'time_available_id' => $value
+                        )
+                    );
+                }
+
+            } else {
+
+                //update
+                foreach ($has_date as $key => $date) { $id_date = $date->id; }
+
+                // how to
+                // $wpdb->update( $table, $data, $where, $format = null, $where_format = null );
+
+                // $wpdb->update( 
+                //     'table', 
+                //     array( 
+                //     'column1' => 'value1',  // string
+                //     'column2' => 'value2'   // integer (number) 
+                //     ), 
+                //     array( 'ID' => 1 ), 
+                //     array( 
+                //     '%s',   // value1
+                //     '%d'    // value2
+                //     ), 
+                //     array( '%d' ) 
+                //     );
+
+            }
+
+        }
 
         /**
         * Append the 'Choose Time Trader' thickbox content to the bottom of selected admin pages
@@ -1051,31 +407,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         }
 
         /**
-        * Add settings link on plugin page
-        */
-        public function upgrade_to_pro_link( $links ) {
-            // if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'timetrader-pro/timetrader-pro.php' ) ) {
-            //     $links[] = '<a href="http://www.timetrader.com/upgrade" target="_blank">' . __( "Go Pro", "timetrader" ) . '</a>';
-            // }
-            // return $links;
-        }
-
-
-        /**
-        * Upgrade CTA.
-        */
-        public function upgrade_to_pro_cta() {
-            // global $user_ID;
-            // if ( function_exists( 'is_plugin_active' ) && ! is_plugin_active( 'timetrader-pro/timetrader-pro.php' ) ) {
-            //     $link = apply_filters( 'timetrader_hoplink', 'http://www.timetrader.com/upgrade/' );
-            //     $link .= '?utm_source=lite&amp;utm_medium=nag&amp;utm_campaign=pro';
-            //     $text = "Time Trader v" . TIMETRADER_VERSION . " - " . __( 'Upgrade to Pro $19', "timetrader" );
-            //     echo "<div style='display: none;' id='screen-options-link-wrap'><a target='_blank' class='show-settings dashicons-before dashicons-performance' href='{$link}'>{$text}</a></div>";
-            // }
-        }
-
-
-        /**
         * Start output buffering.
         *
         * Note: wp_ob_end_flush_all is called by default 
@@ -1084,7 +415,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function start_resource_manager() {
             ob_start( array( $this, 'resource_manager' ) );
         }
-
 
         /**
         * Process the whole page output. Move link tags with an ID starting
@@ -1117,7 +447,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
             return $html->save();
         }
-
 
         private function create_tables() {
             global $wpdb;
@@ -1176,6 +505,20 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             //  'text' => $welcome_text,
             //  )
             // );
+        }
+
+        /**
+        * Add the help tab to the screen.
+        */
+        public function help_tab() {
+            $screen = get_current_screen();
+            // documentation tab
+            $screen->add_help_tab( array(
+                'id'    => 'documentation',
+                'title' => __( 'Documentation', 'timetrader' ),
+                'content'   => "<p><a href='http://www.timetrader.com/documentation/' target='blank'>Time Trader Documentation</a></p>",
+                )
+            );
         }
 
     }
