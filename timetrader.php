@@ -869,12 +869,17 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 $date_available = $_POST['date_available'];
 
                 function insert_values( $date_available ) {
+
+                    // se ja tem registro date faz update
+
                     global $wpdb;
                     $table_date_available = $wpdb->prefix . 'timetrader_date_available';
                     $wpdb->insert( $table_date_available, array(
                         'date_available' => $date_available
                         )
                     );
+
+
                 }
                 insert_values( $date_available );
             }
@@ -936,7 +941,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         echo '<input class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label class="label_time_available" for="' . $value->id . '">' . $value->time_available . '</label></br>';
                     }
                     ?>
-                    <input type="submit">
+                    <input type="submit" value="Salvar">
                 </form>
 
             </div>
