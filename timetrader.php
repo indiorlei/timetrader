@@ -862,23 +862,47 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * Render the admin page
         */
         public function render_admin_page() {
+            global $wpdb;
             // code php of admin page
             if( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
                 require_once( ABSPATH . 'wp-load.php' );
-
                 $date_available = $_POST['date_available'];
 
                 function insert_values( $date_available ) {
-
-                    // se ja tem registro date faz update
-
                     global $wpdb;
+                    
                     $table_date_available = $wpdb->prefix . 'timetrader_date_available';
-                    $wpdb->insert( $table_date_available, array(
-                        'date_available' => $date_available
-                        )
-                    );
 
+                    $has_date = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
+
+                    // se ja tem uma data faz o update de infos naquela data
+                    if ( empty( $has_date ) ) {
+                        // insert
+                        $wpdb->insert( $table_date_available, array(
+                            'date_available' => $date_available
+                            )
+                        );
+                    } else {
+                        //update
+
+                        // how to
+                        // $wpdb->update( $table, $data, $where, $format = null, $where_format = null );
+
+                        // $wpdb->update( 
+                        //     'table', 
+                        //     array( 
+                        //     'column1' => 'value1',  // string
+                        //     'column2' => 'value2'   // integer (number) 
+                        //     ), 
+                        //     array( 'ID' => 1 ), 
+                        //     array( 
+                        //     '%s',   // value1
+                        //     '%d'    // value2
+                        //     ), 
+                        //     array( '%d' ) 
+                        //     );
+
+                    }
 
                 }
                 insert_values( $date_available );
@@ -914,12 +938,16 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         data: urlData,
                         error: function(xhr, statusText) {
                             console.log('error');
+                            jQuery('.progress').text('Erro!');
                         },
                         success: function(data) {
                             console.log('success');
+                            jQuery('.progress').text('Salvo com Sucesso!');
+                            setTimeout( function() { jQuery('.progress').fadeOut(); }, 5000 );
                         },
                         beforeSend: function() {
                             console.log('beforeSend');
+                            jQuery('.progress').text('Salvando...');
                         },
                         complete: function() {
                             console.log('complete');
@@ -936,12 +964,13 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 <form id="reservation">
                     <input type="hidden" class='date_available' name='date_available' id='date_available'>
                     <?php
-                    $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM ad_timetrader_time_available", OBJECT );
+                    $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM " . $wpdb->prefix . "timetrader_time_available", OBJECT );
                     foreach ($time_available as $key => $value) {
                         echo '<input class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label class="label_time_available" for="' . $value->id . '">' . $value->time_available . '</label></br>';
                     }
                     ?>
                     <input type="submit" value="Salvar">
+                    <span class='progress'></span>
                 </form>
 
             </div>
