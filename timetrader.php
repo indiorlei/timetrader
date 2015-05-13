@@ -886,28 +886,28 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             ?>
             <script type='text/javascript'>
             // code javascript
-            $(document).ready(function() {
+            jQuery(document).ready(function() {
                 
-                $('#calendar').fullCalendar({
+                jQuery('#calendar').fullCalendar({
                     dayClick: function(date) {
-                        $('.fc-day').css('background-color', '');
-                        $(this).css('background-color', '#b1c903');
-                        $('#reservation .date_available').attr('value', date.format());
+                        jQuery('.fc-day').css('background-color', '');
+                        jQuery(this).css('background-color', '#b1c903');
+                        jQuery('#reservation .date_available').attr('value', date.format());
                     },
                     loading: function(bool) {
                         // funcao de loading para caregar
-                        // $('#loading').toggle(bool);
+                        // jQuery('#loading').toggle(bool);
                     }
                 });
 
-                $('#reservation').bind('submit', function(event) {
+                jQuery('#reservation').bind('submit', function(event) {
                     event.preventDefault();
                     
-                    var date_available = $('#date_available').val();
+                    var date_available = jQuery('#date_available').val();
                     
                     var urlData = "&date_available=" + date_available;
                     var urlThis = window.location.href;
-                    $.ajax({
+                    jQuery.ajax({
                         type: "POST",
                         url: urlThis,
                         async: true,
