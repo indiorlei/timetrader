@@ -352,14 +352,21 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
                 $has_reservation_info = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_reservation_info WHERE date_available_id =" . $date_available_id . ";", OBJECT );
 
+
+                // var_dump($has_reservation_info);
+                // die();
+
                 foreach ( $time_available as $value ) {
-
-                    $wpdb->insert( $timetrader_reservation_info, array(
-                        'date_available_id' => $date_available_id,
-                        'time_available_id' => $value
-                        )
-                    );
-
+                    foreach ( $has_reservation_info as $value_reservation_info ) {
+                        var_dump($value_reservation_info);
+                        die();
+                        // if ( $value_reservation_info['date_available_id'] == $date_available_id && $value_reservation_info['time_available_id'] == $time_available_id) {
+                        //     exit;
+                        // }else{
+                        //     $wpdb->insert( $timetrader_reservation_info, array( 'date_available_id' => $date_available_id, 'time_available_id' => $value ) );
+                        // }
+                            
+                    }
                 }
 
                 // foreach ( $time_available as $value ) {
