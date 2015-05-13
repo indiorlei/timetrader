@@ -858,6 +858,64 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
 
 
+        function insert_values( $date_available, $time_available ) {
+            global $wpdb;
+
+            $table_date_available           = $wpdb->prefix . 'timetrader_date_available';
+            $timetrader_time_available      = $wpdb->prefix . 'timetrader_time_available';
+
+            $timetrader_reservation         = $wpdb->prefix . 'timetrader_reservation';
+            $timetrader_reservation_info    = $wpdb->prefix . 'timetrader_reservation_info';
+
+            $timetrader_status              = $wpdb->prefix . 'timetrader_status';
+
+            $has_date = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
+
+            // se ja tem uma data faz o update de infos naquela data
+            if ( empty( $has_date ) ) {
+                // insert
+                $wpdb->insert( $table_date_available, array(
+                    'date_available' => $date_available
+                    )
+                );
+
+                $date_available_insert = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
+                foreach ($date_available_insert as $key => $date) { $date_available_id = $date->id; }
+
+                foreach ($time_available as $value) {
+                    $wpdb->insert( $timetrader_reservation_info, array(
+                        'date_available_id' => $date_available_id,
+                        'time_available_id' => $value
+                        )
+                    );
+                }
+
+
+            } else {
+                //update
+                foreach ($has_date as $key => $date) { $id_date = $date->id; }
+
+                // how to
+                // $wpdb->update( $table, $data, $where, $format = null, $where_format = null );
+
+                // $wpdb->update( 
+                //     'table', 
+                //     array( 
+                //     'column1' => 'value1',  // string
+                //     'column2' => 'value2'   // integer (number) 
+                //     ), 
+                //     array( 'ID' => 1 ), 
+                //     array( 
+                //     '%s',   // value1
+                //     '%d'    // value2
+                //     ), 
+                //     array( '%d' ) 
+                //     );
+
+            }
+
+        }
+
         /**
         * Render the admin page
         */
@@ -872,64 +930,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 $time_available_str = $_POST['time_available'];
                 $time_available = explode( '|', $time_available_str );
 
-                function insert_values( $date_available, $time_available ) {
-                    global $wpdb;
-
-                    $table_date_available           = $wpdb->prefix . 'timetrader_date_available';
-                    $timetrader_time_available      = $wpdb->prefix . 'timetrader_time_available';
-
-                    $timetrader_reservation         = $wpdb->prefix . 'timetrader_reservation';
-                    $timetrader_reservation_info    = $wpdb->prefix . 'timetrader_reservation_info';
-
-                    $timetrader_status              = $wpdb->prefix . 'timetrader_status';
-
-                    $has_date = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
-
-                    // se ja tem uma data faz o update de infos naquela data
-                    if ( empty( $has_date ) ) {
-                        // insert
-                        $wpdb->insert( $table_date_available, array(
-                            'date_available' => $date_available
-                            )
-                        );
-
-                        $date_available_insert = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available where date_available LIKE '" . $date_available . "';", OBJECT );
-                        foreach ($date_available_insert as $key => $date) { $date_available_id = $date->id; }
-
-                        foreach ($time_available as $value) {
-                            $wpdb->insert( $timetrader_reservation_info, array(
-                                'date_available_id' => $date_available_id,
-                                'time_available_id' => $value
-                                )
-                            );
-                        }
-
-
-                    } else {
-                        //update
-                        foreach ($has_date as $key => $date) { $id_date = $date->id; }
-
-                        // how to
-                        // $wpdb->update( $table, $data, $where, $format = null, $where_format = null );
-
-                        // $wpdb->update( 
-                        //     'table', 
-                        //     array( 
-                        //     'column1' => 'value1',  // string
-                        //     'column2' => 'value2'   // integer (number) 
-                        //     ), 
-                        //     array( 'ID' => 1 ), 
-                        //     array( 
-                        //     '%s',   // value1
-                        //     '%d'    // value2
-                        //     ), 
-                        //     array( '%d' ) 
-                        //     );
-
-                    }
-
-                }
-                insert_values( $date_available, $time_available );
+                $this->insert_values( $date_available, $time_available );
             }
             ?>
             <script type='text/javascript'>
