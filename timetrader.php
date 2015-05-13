@@ -358,8 +358,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
                 foreach ( $time_available as $value ) {
                     foreach ( $has_reservation_info as $value_reservation_info ) {
-                        var_dump($value_reservation_info);
-                        die();
                         // if ( $value_reservation_info['date_available_id'] == $date_available_id && $value_reservation_info['time_available_id'] == $time_available_id) {
                         //     exit;
                         // }else{
