@@ -88,7 +88,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             add_action( 'admin_menu', array( $this, 'register_admin_menu' ), 9554 );
             add_action( 'init', array( $this, 'register_post_type' ) );
             add_action( 'init', array( $this, 'register_taxonomy' ) );
-            add_action( 'admin_footer', array( $this, 'admin_footer' ), 11 );
             add_action( 'widgets_init', array( $this, 'register_timetrader_widget' ) );
             if ( defined( 'TIMETRADER_ENABLE_RESOURCE_MANAGER' ) && TIMETRADER_ENABLE_RESOURCE_MANAGER === true ) {
                 add_action( 'template_redirect', array( $this, 'start_resource_manager'), 0 );
@@ -386,48 +385,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             }
 
         }
-
-
-        /**
-        * Append the 'Choose Time Trader' thickbox content to the bottom of selected admin pages
-        */
-        public function admin_footer() {
-            global $pagenow;
-            // Only run in post/page creation and edit screens
-            if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) ) {
-                $sliders = $this->all_meta_sliders( 'title' );
-                ?>
-                <script type="text/javascript">
-                jQuery(document).ready(function() {
-                    jQuery('#inserttimetrader').on('click', function() {
-                        var id = jQuery('#timetrader-select option:selected').val();
-                        window.send_to_editor('[timetrader id=' + id + ']');
-                        tb_remove();
-                    })
-                });
-                </script>
-                <div id="choose-meta-slider" style="display: none;">
-                    <div class="wrap">
-                        <?php
-                        if ( count( $sliders ) ) {
-                            echo "<h3 style='margin-bottom: 20px;'>" . __( "Insert Time Trader", "timetrader" ) . "</h3>";
-                            echo "<select id='timetrader-select'>";
-                            echo "<option disabled=disabled>" . __( "Choose slideshow", "timetrader" ) . "</option>";
-                            foreach ( $sliders as $slider ) {
-                                echo "<option value='{$slider['id']}'>{$slider['title']}</option>";
-                            }
-                            echo "</select>";
-                            echo "<button class='button primary' id='inserttimetrader'>" . __( "Insert slideshow", "timetrader" ) . "</button>";
-                        } else {
-                            _e( "No slideshows found", "timetrader" );
-                        }
-                        ?>
-                    </div>
-                </div>
-                <?php
-            }
-        }
-
 
         /**
         * Start output buffering.
