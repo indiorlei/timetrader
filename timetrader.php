@@ -331,7 +331,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             $timetrader_status              = $wpdb->prefix . 'timetrader_status';
 
             $has_date = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available WHERE date_available LIKE '" . $date_available . "';", OBJECT );
-            
+
             // se ja tem uma data faz o update de infos naquela data
             if ( empty( $has_date ) ) {
                 // insert
@@ -352,31 +352,9 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 //update
                 foreach ( $has_date as $key => $date ) { $date_available_id = $date->id; }
                 $has_reservation_info = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_reservation_info WHERE date_available_id =" . $date_available_id . ";", OBJECT );
-
-                
-
-
-
-
-
-
-
-                // foreach ( $time_available as $value ) {
-                //     foreach ( $has_reservation_info as $value_reservation_info ) {
-                //         $reservation_info_id = $value_reservation_info->id;
-                //         if ( $value == $value_reservation_info->time_available_id ) {
-                //             $wpdb->update(
-                //                 $timetrader_reservation_info,
-                //                 array(
-                //                     'date_available_id' => $date_available_id,
-                //                     'time_available_id' => $value
-                //                     ),
-                //                 array( 'id' => $reservation_info_id )
-                //                 );
-                //         }
-                //     }
-                // }
             }
+
+
         }
 
 
