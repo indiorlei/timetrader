@@ -149,7 +149,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 $capability,
                 'timetrader',
                 array( $this, 'render_admin_page' ),
-                TIMETRADER_ASSETS_URL . 'timetrader/logo.png'
+                TIMETRADER_ASSETS_URL . 'timetrader/logo-timetrader.png'
                 );
 
             // ensure our JavaScript is only loaded on the Time Trader admin page
@@ -351,23 +351,15 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             } else {
                 //update
                 foreach ( $has_date as $key => $date ) { $date_available_id = $date->id; }
-
                 $has_reservation_info = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_reservation_info WHERE date_available_id =" . $date_available_id . ";", OBJECT );
 
+                
 
-                // var_dump($has_reservation_info);
-                // die();
 
-                foreach ( $time_available as $value ) {
-                    foreach ( $has_reservation_info as $value_reservation_info ) {
-                        // if ( $value_reservation_info['date_available_id'] == $date_available_id && $value_reservation_info['time_available_id'] == $time_available_id) {
-                        //     exit;
-                        // }else{
-                        //     $wpdb->insert( $timetrader_reservation_info, array( 'date_available_id' => $date_available_id, 'time_available_id' => $value ) );
-                        // }
-                            
-                    }
-                }
+
+
+
+
 
                 // foreach ( $time_available as $value ) {
                 //     foreach ( $has_reservation_info as $value_reservation_info ) {
@@ -384,10 +376,9 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 //         }
                 //     }
                 // }
-
             }
-
         }
+
 
         /**
         * Start output buffering.

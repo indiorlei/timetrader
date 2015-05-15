@@ -28,16 +28,10 @@ class TimeTraderSystemCheck {
         }
     }
 
-    /**
-    * Update our stored messages
-    */
     private function updateSystemCheck() {
         update_site_option( 'timetrader_systemcheck', $this->options );
     }
 
-    /**
-    * Check the WordPress version.
-    */
     private function checkWordPressVersion() {
         if ( isset( $this->options['wordPressVersion'] ) && $this->options['wordPressVersion']  === false ) {
             return;
@@ -50,9 +44,6 @@ class TimeTraderSystemCheck {
         }
     }
 
-    /**
-    * Check the theme has a call to 'wp_footer'
-    */
     private function checkWpFooter() {
         $current_theme = wp_get_theme();
         $theme_name = $current_theme->Template;
@@ -85,12 +76,8 @@ class TimeTraderSystemCheck {
         $this->printMessage( $error, $key );
     }
 
-    /**
-    * Print a warning message to the screen
-    */
     private function printMessage( $message, $key ) {
         $nonce = wp_create_nonce( "timetrader-dismiss-{$key}" );
         echo "<div id='message' class='updated'><p><b>Warning:</b> {$message}<br /><br /><a class='button' href='?page=timetrader&dismissMessage={$key}&_wpnonce={$nonce}'>Hide</a></p></div>";
     }
-    
 }
