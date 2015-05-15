@@ -18,9 +18,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
     class TimeTraderPlugin {
         public $version = '0.1';
-        public $slider = null;
 
-        
         public static function init() {
             $timetrader = new self();
         }
@@ -104,7 +102,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
 
         /**
-        * Register ML Slider post type
+        * Register Timetrader post type
         */
         public function register_post_type() {
             register_post_type( 'timetrader', array(
@@ -124,7 +122,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
 
         /**
-        * Register taxonomy to store slider => slides relationship
+        * Register taxonomy to timetrader
         */
         public function register_taxonomy() {
             register_taxonomy( 'timetrader', 'attachment', array(
@@ -201,33 +199,12 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             // plugin dependencies
             wp_enqueue_script( 'jquery-ui-core', array( 'jquery' ) );
             wp_enqueue_script( 'jquery-ui-sortable', array( 'jquery', 'jquery-ui-core' ) );
-            wp_enqueue_script( 'timetrader-calendar-moment', TIMETRADER_ASSETS_URL . 'calendar/js/moment.min.js', array( 'jquery' ), TIMETRADER_VERSION );
-            wp_enqueue_script( 'timetrader-calendar-fullcalendar', TIMETRADER_ASSETS_URL . 'calendar/js/fullcalendar.min.js', array( 'jquery' ), TIMETRADER_VERSION );
             wp_dequeue_script( 'link' ); // WP Posts Filter Fix (Advanced Settings not toggling)
             wp_dequeue_script( 'ai1ec_requirejs' ); // All In One Events Calendar Fix (Advanced Settings not toggling)
-            $this->localize_admin_scripts();
+            
+            wp_enqueue_script( 'timetrader-calendar-moment', TIMETRADER_ASSETS_URL . 'calendar/js/moment.min.js', array( 'jquery' ), TIMETRADER_VERSION );
+            wp_enqueue_script( 'timetrader-calendar-fullcalendar', TIMETRADER_ASSETS_URL . 'calendar/js/fullcalendar.min.js', array( 'jquery' ), TIMETRADER_VERSION );
             do_action( 'timetrader_register_admin_scripts' );
-        }
-
-
-        /**
-        * Localise admin script
-        */
-        public function localize_admin_scripts() {
-            wp_localize_script( 'timetrader-admin-script', 'timetrader', array(
-                'url' => __( "URL", "timetrader" ),
-                'caption' => __( "Caption", "timetrader" ),
-                'new_window' => __( "New Window", "timetrader" ),
-                'confirm' => __( "Are you sure?", "timetrader" ),
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'change_image' => __( "Select replacement image", "timetrader"),
-                'resize_nonce' => wp_create_nonce( 'timetrader_resize' ),
-                'addslide_nonce' => wp_create_nonce( 'timetrader_addslide' ),
-                'changeslide_nonce' => wp_create_nonce( 'timetrader_changeslide' ),
-                'iframeurl' => admin_url( 'admin-post.php?action=timetrader_preview' ),
-                'useWithCaution' => __( "Caution: This setting is for advanced developers only. If you're unsure, leave it checked.", "timetrader" )
-                )
-            );
         }
 
 
@@ -256,15 +233,13 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * Render the admin page
         */
         public function render_admin_page() {
-            global $wpdb;
             // code php of admin page
+            global $wpdb;
             if( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
                 require_once( ABSPATH . 'wp-load.php' );
-                
                 $date_available = $_POST['date_available'];
                 $time_available_str = $_POST['time_available'];
                 $time_available = explode( '|', $time_available_str, -1 );
-
                 $this->insert_values( $date_available, $time_available );
             }
             ?>
