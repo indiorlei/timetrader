@@ -235,40 +235,76 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         public function render_admin_page() {
             // code php of admin page
             global $wpdb;
+
             if( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
                 require_once( ABSPATH . 'wp-load.php' );
-                $date_available = $_POST['date_available'];
-                $time_available_str = $_POST['time_available'];
-                $time_available = explode( '|', $time_available_str, -1 );
+                $date_available     = isset($_POST['date_available']);
+                $time_available_str = isset($_POST['time_available']);
+                $time_available     = explode( '|', $time_available_str, -1 );
                 $this->insert_values( $date_available, $time_available );
             }
+
+            if( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
+                require_once( ABSPATH . 'wp-load.php' );
+                // function get values
+                $date_available = isset($_GET['date_available']);
+                $this->get_calendar_time_available( $date_available );
+            }
+
             ?>
             <script type='text/javascript'>
             // code javascript
             jQuery(document).ready(function() {
+
                 jQuery('#calendar').fullCalendar({
                     dayClick: function(date) {
                         jQuery('.fc-day').css('background-color', '');
                         jQuery(this).css('background-color', '#b1c903');
                         jQuery('#reservation .date_available').attr('value', date.format());
+
+                        event.preventDefault();
+                        var date_available = jQuery('#date_available').val();
+
+                        var urlData = "&date_available=" + date_available;
+
+                        var urlThis = window.location.href;
+
+                        jQuery.ajax({
+                            type: "GET",
+                            url: urlThis,
+                            async: true,
+                            data: urlData,
+                            error: function(xhr, statusText) {
+                                console.log('calendar error');
+                            },
+                            success: function(data) {
+                                console.log('calendar success' + date_available);
+                            },
+                            beforeSend: function() {
+                                console.log('calendar beforeSend' + date_available);
+                            },
+                            complete: function() {
+                                console.log('calendar complete' + date_available);
+                            }
+                        });
+
+
                     },
                     loading: function(bool) {
                         // funcao de loading para caregar
                         // jQuery('#loading').toggle(bool);
                     }
                 });
+
                 jQuery('#reservation').bind('submit', function(event) {
                     event.preventDefault();
-                    
                     var date_available = jQuery('#date_available').val();
                     var time_available = '';
                     jQuery(':checkbox').each(function () {
                         var ischecked = jQuery(this).is(':checked');
                         if ( ischecked ) { time_available += jQuery(this).val() + '|'; }
                     });
-
                     var urlData = "&date_available=" + date_available + "&time_available=" + time_available;
-
                     var urlThis = window.location.href;
                     jQuery.ajax({
                         type: "POST",
@@ -293,6 +329,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         }
                     });
                 });
+
             });
             </script>
             <!-- body plugin -->
@@ -313,6 +350,16 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
             </div>
             <?php
+        }
+
+
+        /**
+        * get values
+        */
+        public function get_calendar_time_available( $date_available ) {
+            global $wpdb;
+            $calendar_time_available = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available WHERE date_available LIKE '" . $date_available . "';", OBJECT );
+            var_dump($calendar_time_available);
         }
 
 
@@ -350,8 +397,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 }
             } else {
                 //update
-                foreach ( $has_date as $key => $date ) { $date_available_id = $date->id; }
-                $has_reservation_info = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_reservation_info WHERE date_available_id =" . $date_available_id . ";", OBJECT );
+
+                // foreach ( $has_date as $key => $date ) { $date_available_id = $date->id; }
+                // $has_reservation_info = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_reservation_info WHERE date_available_id =" . $date_available_id . ";", OBJECT );
+
             }
 
 
