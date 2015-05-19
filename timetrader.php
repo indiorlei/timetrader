@@ -247,7 +247,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             if( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
                 require_once( ABSPATH . 'wp-load.php' );
                 global $calendar_time_available;
-                // if ( isset( $_GET['date_available'] ) ) { $this->get_calendar_time_available( $_GET['date_available'] ); }
                 if ( isset( $_GET['date_available'] ) ) { $calendar_time_available = $_GET['date_available']; }
             }
 
@@ -257,21 +256,14 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             jQuery(document).ready(function() {
 
                 jQuery('#calendar').fullCalendar({
-
                     dayClick: function(date) {
-
                         jQuery('.fc-day').css('background-color', '');
                         jQuery(this).css('background-color', '#b1c903');
                         jQuery('#reservation .date_available').attr('value', date.format());
-
-                        event.preventDefault();
-
-                        var date_available = jQuery('#date_available').val();
-
-                        var urlData = "&date_available=" + date_available;
-
+                        // event.preventDefault();
+                        var urlData = "&date_available=" + jQuery('#date_available').val();
+                        // var urlData = "&date_available=" + date.format();
                         var urlThis = window.location.href;
-
                         jQuery.ajax({
                             type: "GET",
                             url: urlThis,
@@ -293,8 +285,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                                 // console.log('calendar complete');
                             }
                         });
-
-
                     },
 
                     loading: function(bool) {
