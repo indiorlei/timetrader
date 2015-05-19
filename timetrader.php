@@ -278,16 +278,19 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                             async: true,
                             data: urlData,
                             error: function(xhr, statusText) {
-                                console.log('calendar error');
+                                // console.log('calendar error');
                             },
                             success: function(data) {
-                                console.log('calendar success');
+                                // console.log('calendar success');
+                                jQuery('#reservation').html(jQuery(data).find('#reservation'));
+                                jQuery('#reservation').show('400');
                             },
                             beforeSend: function() {
-                                console.log('calendar beforeSend');
+                                // console.log('calendar beforeSend');
+                                jQuery('#reservation').hide('400');
                             },
                             complete: function(data) {
-                                console.log('calendar complete');
+                                // console.log('calendar complete');
                             }
                         });
 
