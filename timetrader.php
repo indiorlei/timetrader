@@ -246,9 +246,9 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
 
             if( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
                 require_once( ABSPATH . 'wp-load.php' );
-                // function get values
-                $date_available = isset($_GET['date_available']);
-                $this->get_calendar_time_available( $date_available );
+                global $calendar_time_available;
+                // if ( isset( $_GET['date_available'] ) ) { $this->get_calendar_time_available( $_GET['date_available'] ); }
+                if ( isset( $_GET['date_available'] ) ) { $calendar_time_available = $_GET['date_available']; }
             }
 
             ?>
@@ -257,7 +257,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             jQuery(document).ready(function() {
 
                 jQuery('#calendar').fullCalendar({
-                    
+
                     dayClick: function(date) {
 
                         jQuery('.fc-day').css('background-color', '');
@@ -265,6 +265,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         jQuery('#reservation .date_available').attr('value', date.format());
 
                         event.preventDefault();
+
                         var date_available = jQuery('#date_available').val();
 
                         var urlData = "&date_available=" + date_available;
@@ -280,13 +281,13 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                                 console.log('calendar error');
                             },
                             success: function(data) {
-                                console.log('calendar success' + date_available);
+                                console.log('calendar success');
                             },
                             beforeSend: function() {
-                                console.log('calendar beforeSend' + date_available);
+                                console.log('calendar beforeSend');
                             },
-                            complete: function() {
-                                console.log('calendar complete' + date_available);
+                            complete: function(data) {
+                                console.log('calendar complete');
                             }
                         });
 
@@ -301,7 +302,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 });
 
                 jQuery('#reservation').bind('submit', function(event) {
-
                     event.preventDefault();
                     var date_available = jQuery('#date_available').val();
                     var time_available = '';
@@ -317,60 +317,56 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                         async: true,
                         data: urlData,
                         error: function(xhr, statusText) {
-                            console.log('error');
+                            console.log( 'error' );
                             jQuery('.progress').text('Erro!');
                         },
                         success: function(data) {
-                            console.log('success');
+                            console.log( 'success' );
                             jQuery('.progress').text('Salvo com Sucesso!');
                             setTimeout( function() { jQuery('.progress').fadeOut(); }, 5000 );
                         },
                         beforeSend: function() {
-                            console.log('beforeSend');
+                            console.log( 'beforeSend' );
                             jQuery('.progress').text('Salvando...');
                         },
                         complete: function() {
-                            console.log('complete');
+                            console.log( 'complete' );
                         }
                     });
-                
                 });
+
 
             });
             </script>
             <!-- body plugin -->
             <div class="wrap timetrader">
                 <div id="calendar"></div>
-
                 <form id="reservation">
                     <input type="hidden" class='date_available' name='date_available' id='date_available'>
                     <?php
+                    $get_calendar_time_available = $GLOBALS['wpdb']->get_results( "SELECT da.id, da.date_available, ri.date_available_id, ri.time_available_id FROM ". $wpdb->prefix ."timetrader_date_available da, ". $wpdb->prefix ."timetrader_reservation_info ri WHERE da.id = ri.date_available_id AND da.date_available LIKE '" . $calendar_time_available . "';", OBJECT );
                     $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM " . $wpdb->prefix . "timetrader_time_available", OBJECT );
+
                     foreach ($time_available as $key => $value) {
-                        echo '<input class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label class="label_time_available" for="' . $value->id . '">' . $value->time_available . '</label></br>';
+                        $checked = '';
+                        foreach ($get_calendar_time_available as $value_calendar_time_available ) {
+                            // checked="checked"
+                            if ( $value_calendar_time_available->time_available_id == $value->id ) {
+                                $checked = 'checked="checked"';
+                            }
+                        }
+                        echo '<input ' . $checked . 'class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label class="label_time_available" for="' . $value->id . '">' . $value->time_available . '</label></br>';
+                        
                     }
                     ?>
                     <input type="submit" value="Salvar">
                     <span class='progress'></span>
                 </form>
-
             </div>
             <?php
         }
 
 
-        /**
-        * get values
-        */
-        public function get_calendar_time_available( $date_available ) {
-
-            global $wpdb;
-
-            $calendar_time_available = $GLOBALS['wpdb']->get_results( "SELECT * FROM " . $wpdb->prefix . "timetrader_date_available WHERE date_available LIKE '" . $date_available . "';", OBJECT );
-
-            var_dump($calendar_time_available);
-
-        }
 
 
         /**
