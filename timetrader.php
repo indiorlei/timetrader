@@ -233,6 +233,10 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
         * Render the admin page
         */
         public function render_admin_page() {
+
+            // ERRO AO USAR OS DOIS AJAX/JavaScript JUNTOS 
+
+            
             // code php of admin page
             global $wpdb;
 
@@ -275,23 +279,21 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                             success: function(data) {
                                 // console.log('calendar success');
                                 jQuery('#reservation').html(jQuery(data).find('#reservation'));
-                                jQuery('#reservation').show('400');
+                                jQuery('#reservation').fadeIn('400');
                             },
                             beforeSend: function() {
                                 // console.log('calendar beforeSend');
-                                jQuery('#reservation').hide('400');
+                                jQuery('#reservation').fadeOut('400');
                             },
                             complete: function(data) {
                                 // console.log('calendar complete');
                             }
                         });
                     },
-
                     loading: function(bool) {
                         // funcao de loading para caregar
                         // jQuery('#loading').toggle(bool);
                     }
-
                 });
 
                 jQuery('#reservation').bind('submit', function(event) {
@@ -328,7 +330,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     });
                 });
 
-
             });
             </script>
             <!-- body plugin -->
@@ -339,17 +340,12 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                     <?php
                     $get_calendar_time_available = $GLOBALS['wpdb']->get_results( "SELECT da.id, da.date_available, ri.date_available_id, ri.time_available_id FROM ". $wpdb->prefix ."timetrader_date_available da, ". $wpdb->prefix ."timetrader_reservation_info ri WHERE da.id = ri.date_available_id AND da.date_available LIKE '" . $calendar_time_available . "';", OBJECT );
                     $time_available = $GLOBALS['wpdb']->get_results( "SELECT id, TIME_FORMAT(time_available, '%H:%i') time_available FROM " . $wpdb->prefix . "timetrader_time_available", OBJECT );
-
                     foreach ($time_available as $key => $value) {
                         $checked = '';
                         foreach ($get_calendar_time_available as $value_calendar_time_available ) {
-                            // checked="checked"
-                            if ( $value_calendar_time_available->time_available_id == $value->id ) {
-                                $checked = 'checked="checked"';
-                            }
+                            if ( $value_calendar_time_available->time_available_id == $value->id ) { $checked = 'checked="checked"'; }
                         }
                         echo '<input ' . $checked . 'class="time_available" id="'. $value->id . '"type="checkbox" name="time_available" value="' . $value->id . '"><label class="label_time_available" for="' . $value->id . '">' . $value->time_available . '</label></br>';
-                        
                     }
                     ?>
                     <input type="submit" value="Salvar">
@@ -358,8 +354,6 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             </div>
             <?php
         }
-
-
 
 
         /**
