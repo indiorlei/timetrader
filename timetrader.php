@@ -28,7 +28,7 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             $this->define_constants();
             $this->includes();
             $this->setup_actions();
-            $this->create_tables();
+            // $this->create_tables();
         }
 
         
@@ -158,15 +158,15 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             add_action( 'load-' . $page, array( $this, 'help_tab' ) );
 
 
-            $page = add_submenu_page(
-                'timetrader',
-                __( 'Algum SubMenu', 'timetrader' ),
-                __( 'Algum SubMenu', 'timetrader' ),
-                $capability,
-                'timetrader-sub-menu',//aqui vai a function da nova pagina
-                array( $this, 'sub_menu' ) //aqui vai a funcition que renderiza a pagina
-                );
-            add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
+            // $page = add_submenu_page(
+            //     'timetrader',
+            //     __( 'Algum SubMenu', 'timetrader' ),
+            //     __( 'Algum SubMenu', 'timetrader' ),
+            //     $capability,
+            //     'timetrader-sub-menu',//aqui vai a function da nova pagina
+            //     array( $this, 'sub_menu' ) //aqui vai a funcition que renderiza a pagina
+            //     );
+            // add_action( 'admin_print_styles-' . $page, array( $this, 'register_admin_styles' ) );
 
         }
 
@@ -248,11 +248,11 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
                 $this->insert_values( $date_available, $time_available );
             }
 
-            if( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
-                require_once( ABSPATH . 'wp-load.php' );
-                global $calendar_time_available;
-                if ( isset( $_GET['date_available'] ) ) { $calendar_time_available = $_GET['date_available']; }
-            }
+            // if( 'GET' == $_SERVER['REQUEST_METHOD'] ) {
+            //     require_once( ABSPATH . 'wp-load.php' );
+            //     global $calendar_time_available;
+            //     if ( isset( $_GET['date_available'] ) ) { $calendar_time_available = $_GET['date_available']; }
+            // }
 
             ?>
             <script type='text/javascript'>
@@ -495,26 +495,26 @@ if ( ! class_exists( 'TimeTraderPlugin' ) ) :
             dbDelta( $sql );
 
             // inserts default
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 1,  'time_available' => '0000-00-00 08:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 2,  'time_available' => '0000-00-00 08:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 3,  'time_available' => '0000-00-00 09:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 4,  'time_available' => '0000-00-00 09:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 5,  'time_available' => '0000-00-00 10:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 6,  'time_available' => '0000-00-00 10:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 7,  'time_available' => '0000-00-00 11:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 8,  'time_available' => '0000-00-00 11:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 9,  'time_available' => '0000-00-00 12:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 10, 'time_available' => '0000-00-00 12:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 11, 'time_available' => '0000-00-00 13:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 12, 'time_available' => '0000-00-00 13:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 13, 'time_available' => '0000-00-00 14:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 14, 'time_available' => '0000-00-00 14:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 15, 'time_available' => '0000-00-00 15:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 16, 'time_available' => '0000-00-00 15:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 17, 'time_available' => '0000-00-00 16:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 18, 'time_available' => '0000-00-00 16:30:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 19, 'time_available' => '0000-00-00 17:00:00', ) );
-            // $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 20, 'time_available' => '0000-00-00 17:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 1,  'time_available' => '0000-00-00 08:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 2,  'time_available' => '0000-00-00 08:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 3,  'time_available' => '0000-00-00 09:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 4,  'time_available' => '0000-00-00 09:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 5,  'time_available' => '0000-00-00 10:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 6,  'time_available' => '0000-00-00 10:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 7,  'time_available' => '0000-00-00 11:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 8,  'time_available' => '0000-00-00 11:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 9,  'time_available' => '0000-00-00 12:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 10, 'time_available' => '0000-00-00 12:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 11, 'time_available' => '0000-00-00 13:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 12, 'time_available' => '0000-00-00 13:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 13, 'time_available' => '0000-00-00 14:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 14, 'time_available' => '0000-00-00 14:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 15, 'time_available' => '0000-00-00 15:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 16, 'time_available' => '0000-00-00 15:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 17, 'time_available' => '0000-00-00 16:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 18, 'time_available' => '0000-00-00 16:30:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 19, 'time_available' => '0000-00-00 17:00:00', ) );
+            $wpdb->insert( $wpdb->prefix . 'timetrader_time_available', array('id' => 20, 'time_available' => '0000-00-00 17:30:00', ) );
 
         }
 
