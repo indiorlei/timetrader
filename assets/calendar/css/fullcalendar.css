@@ -16,7 +16,14 @@ font-size:1em;}
 .fc-unthemed .fc-popover .fc-header .fc-close{color:#666;}
 
 /*css para hoje*/
-.fc-unthemed .fc-today{/*css para hoje*//*background:#fcf8e3;*/}
+.fc-bg .fc-today span{ 
+ background:#b1c903 !important;  
+ width: 50%;
+  height: 50%;
+  margin: 0 auto;
+  vertical-align: middle;
+  border-radius: 50%;
+}
 .fc-day{border-radius:50%;cursor:pointer;}
 .fc-highlight{/* when user is selecting cells */background:#bce8f1;opacity:.3;filter:alpha(opacity=30);/* for IE */}
 .fc-bgevent{/* default look for background events */background:rgb(143,223,130);opacity:.3;filter:alpha(opacity=30);/* for IE */}
